@@ -1,195 +1,28 @@
-// // // import React, { useEffect, useState, useContext } from "react";
-// // // import axios from "axios";
-// // // import UserContext from "@/contextApi/UserContext";
-
-// // // const ChatBox = ({ chat }) => {
-// // //   const { user } = useContext(UserContext);
-// // //   const [messages, setMessages] = useState([]);
-
-// // //   useEffect(() => {
-// // //     const fetchMessages = async () => {
-// // //       try {
-// // //         const config = {
-// // //           headers: {
-// // //             Authorization: `Bearer ${user.token}`,
-// // //           },
-// // //         };
-// // //         const { data } = await axios.get(`http://localhost:5000/api/message/${chat._id}`, config);
-// // //         setMessages(data);
-// // //       } catch (error) {
-// // //         console.error("Failed to fetch messages", error);
-// // //       }
-// // //     };
-
-// // //     fetchMessages();
-// // //   }, [chat, user]);
-
-// // //   return (
-// // //     <div className="p-4">
-// // //       <h2 className="text-xl font-bold mb-4">Chat Conversation</h2>
-// // //       <div className="space-y-2">
-// // //         {messages.map((message) => (
-// // //           <div key={message._id} className="p-2 border-b">
-// // //             <div className="font-semibold">{message.sender.name}</div>
-// // //             <div>{message.content}</div>
-// // //           </div>
-// // //         ))}
-// // //       </div>
-// // //     </div>
-// // //   );
-// // // };
-
-// // // export default ChatBox;
-
-// // // // ChatBox.jsx
-// // // import React, { useEffect, useState } from "react";
-// // // import { useChat } from "../contextApi/ChatProvider";
-// // // import { useUser } from "../contextApi/UserContext";
-// // // import axios from "axios";
-
-// // // export default function ChatBox() {
-// // //   const { selectedChat } = useChat();
-// // //   const { user } = useUser();
-// // //   const [messages, setMessages] = useState([]);
-
-// // //   useEffect(() => {
-// // //     const fetchMessages = async () => {
-// // //       if (!selectedChat) return;
-// // //       try {
-// // //         const config = {
-// // //           headers: {
-// // //             Authorization: `Bearer ${user.token}`,
-// // //           },
-// // //         };
-// // //         const { data } = await axios.get(`http://localhost:5000/api/message/${selectedChat._id}`, config);
-// // //         // console.log(data);
-// // //         // console.group(data)
-// // //         setMessages(data);
-// // //       } catch (error) {
-// // //         console.error("Failed to fetch messages", error);
-// // //       }
-// // //     };
-
-// // //     fetchMessages();
-// // //   }, [selectedChat, user]);
 
 
-// // //   return (
-// // //     <div className="p-4">
-// // //       <h2 className="text-xl font-bold mb-4">Chat Conversation</h2>
-// // //       <div className="space-y-2">
-// // //         {messages.map((message) => (
-// // //           <div key={message._id} className="p-2 border-b">
-// // //             <div className="font-semibold">{message.sender.name}</div>
-// // //             <div>{message.content}</div>
-// // //           </div>
-// // //         ))}
-// // //       </div>
-// // //     </div>
-// // //   );
-// // // }
-// // import React, { useEffect, useState } from "react";
-// // import { useChat } from "../contextApi/ChatProvider";
-// // import { useUser } from "../contextApi/UserContext";
-// // import axios from "axios";
-
-// // export default function ChatBox() {
-// //   const { selectedChat } = useChat();
-// //   const { user } = useUser();
-// //   const [messages, setMessages] = useState([]);
-// //   const [newMessage, setNewMessage] = useState("");
-
-// //   // Fetch messages whenever the selected chat or user changes.
-// //   useEffect(() => {
-// //     const fetchMessages = async () => {
-// //       if (!selectedChat) return;
-// //       try {
-// //         const config = {
-// //           headers: {
-// //             Authorization: `Bearer ${user.token}`,
-// //           },
-// //         };
-// //         // Use the correct backend URL here (ensure no extra colon in the URL)
-// //         const { data } = await axios.get(`http://localhost:5000/api/message/${selectedChat._id}`, config);
-// //         setMessages(data);
-// //       } catch (error) {
-// //         console.error("Failed to fetch messages", error);
-// //       }
-// //     };
-
-// //     fetchMessages();
-// //   }, [selectedChat, user]);
-
-// //   // Send a new message to the backend.
-// //   const sendMessage = async () => {
-// //     if (!newMessage) return; // do nothing if message is empty
-// //     try {
-// //       const config = {
-// //         headers: {
-// //           "Content-Type": "application/json",
-// //           Authorization: `Bearer ${user.token}`,
-// //         },
-// //       };
-
-// //       // Send the message. Your backend should create a message and update the chat's latestMessage.
-// //       const { data } = await axios.post(
-// //         "http://localhost:5000/api/message",
-// //         { chatId: selectedChat._id, content: newMessage },
-// //         config
-// //       );
-
-// //       // Append the new message to the current list.
-// //       setMessages([...messages, data]);
-// //       setNewMessage("");
-// //     } catch (error) {
-// //       console.error("Failed to send message", error);
-// //     }
-// //   };
-
-// //   return (
-// //     <div className="p-4 flex flex-col h-full">
-// //       <h2 className="text-xl font-bold mb-4">Chat Conversation</h2>
-// //       {/* Message list */}
-// //       <div className="flex-1 space-y-2 overflow-y-auto">
-// //         {messages.map((message) => (
-// //           <div key={message._id} className="p-2 border-b">
-// //             <div className="font-semibold">{message.sender.name}</div>
-// //             <div>{message.content}</div>
-// //           </div>
-// //         ))}
-// //       </div>
-// //       {/* Input field and Send button */}
-// //       <div className="flex items-center mt-4">
-// //         <input
-// //           type="text"
-// //           placeholder="Type your message..."
-// //           value={newMessage}
-// //           onChange={(e) => setNewMessage(e.target.value)}
-// //           className="flex-1 border border-gray-300 p-2 rounded-l focus:outline-none"
-// //         />
-// //         <button
-// //           onClick={sendMessage}
-// //           className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 focus:outline-none"
-// //         >
-// //           Send
-// //         </button>
-// //       </div>
-// //     </div>
-// //   );
-// // }
-
-// import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState, useRef } from "react";
 // import { useChat } from "../contextApi/ChatProvider";
 // import { useUser } from "../contextApi/UserContext";
 // import axios from "axios";
+// // import "./ChatBox.css"; // Import the CSS file with your styles
 
 // export default function ChatBox() {
 //   const { selectedChat } = useChat();
 //   const { user } = useUser();
 //   const [messages, setMessages] = useState([]);
 //   const [newMessage, setNewMessage] = useState("");
+//   const messagesEndRef = useRef(null);
 
-//   // Fetch messages when the selected chat or user changes.
+//   // Auto-scroll to bottom whenever messages change.
+//   const scrollToBottom = () => {
+//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+//   };
+
+//   useEffect(() => {
+//     scrollToBottom();
+//   }, [messages]);
+
+//   // Fetch messages when selectedChat or user changes.
 //   useEffect(() => {
 //     const fetchMessages = async () => {
 //       if (!selectedChat) return;
@@ -199,8 +32,11 @@
 //             Authorization: `Bearer ${user.token}`,
 //           },
 //         };
-//         // Ensure the URL is correct (no extra colon)
-//         const { data } = await axios.get(`http://localhost:5000/api/message/${selectedChat._id}`, config);
+//         // Ensure your backend URL is correct.
+//         const { data } = await axios.get(
+//           `http://localhost:5000/api/message/${selectedChat._id}`,
+//           config
+//         );
 //         setMessages(data);
 //       } catch (error) {
 //         console.error("Failed to fetch messages", error);
@@ -210,9 +46,10 @@
 //     fetchMessages();
 //   }, [selectedChat, user]);
 
-//   // Send a new message to the backend.
-//   const sendMessage = async () => {
-//     if (!newMessage.trim()) return;
+//   // Handle sending a new message.
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!newMessage.trim()) return; // Do nothing if message is empty
 //     try {
 //       const config = {
 //         headers: {
@@ -220,12 +57,15 @@
 //           Authorization: `Bearer ${user.token}`,
 //         },
 //       };
+
+//       // Post the new message to the backend.
 //       const { data } = await axios.post(
 //         "http://localhost:5000/api/message",
 //         { chatId: selectedChat._id, content: newMessage },
 //         config
 //       );
-//       // Append the new message to the messages list.
+
+//       // Append the newly sent message to the messages list.
 //       setMessages([...messages, data]);
 //       setNewMessage("");
 //     } catch (error) {
@@ -234,51 +74,61 @@
 //   };
 
 //   return (
-//     <div className="p-4 flex flex-col h-full">
-//       <h2 className="text-xl font-bold mb-4">Chat Conversation</h2>
-//       {/* Message list */}
-//       <div className="flex-1 space-y-2 overflow-y-auto">
+//     <div className="chat-container">
+//       <div className="messages-container">
 //         {messages.map((message) => (
-//           <div key={message._id} className="p-2 border-b">
-//             <div className="font-semibold">{message.sender.name}</div>
-//             <div>{message.content}</div>
+//           <div
+//             key={message._id}
+//             className={`message ${
+//               message.sender && message.sender._id === user._id ? "sent" : "received"
+//             }`}
+//           >
+//             {/* Display sender's name if available */}
+//             {message.sender && message.sender.name && (
+//               <div className="font-semibold">{message.sender.name}</div>
+//             )}
+//             <div>{message.content || message.text}</div>
 //           </div>
 //         ))}
+//         <div ref={messagesEndRef} />
 //       </div>
-//       {/* Message input and send button */}
-//       <div className="flex items-center mt-4">
+//       <form className="message-input" onSubmit={handleSubmit}>
 //         <input
 //           type="text"
-//           placeholder="Type your message..."
 //           value={newMessage}
 //           onChange={(e) => setNewMessage(e.target.value)}
-//           className="flex-1 border border-gray-300 p-2 rounded-l focus:outline-none"
+//           placeholder="Type a message..."
 //         />
-//         <button
-//           onClick={sendMessage}
-//           className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 focus:outline-none"
-//         >
-//           Send
-//         </button>
-//       </div>
+//         <button type="submit">Send</button>
+//       </form>
 //     </div>
 //   );
 // }
-// ChatBox.jsx
-import React, { useEffect, useState } from "react";
+
+
+import React, { useEffect, useState, useRef } from "react";
 import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
 import axios from "axios";
-import ChatHeader from "./ChatHeader";
-import MessageList from "./MessageList";
-import MessageInput from "./MessageInput";
+// import "./ChatBox.css"; // Ensure this file is imported so that the styles are applied
 
-export default function ChatBox({ onBack }) {
+export default function ChatBox() {
   const { selectedChat } = useChat();
   const { user } = useUser();
   const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef(null);
 
-  // Fetch messages when selectedChat or user changes
+  // Auto-scroll to bottom whenever messages change.
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Fetch messages when selectedChat or user changes.
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedChat) return;
@@ -288,6 +138,7 @@ export default function ChatBox({ onBack }) {
             Authorization: `Bearer ${user.token}`,
           },
         };
+        // Ensure your backend URL is correct.
         const { data } = await axios.get(
           `http://localhost:5000/api/message/${selectedChat._id}`,
           config
@@ -301,8 +152,10 @@ export default function ChatBox({ onBack }) {
     fetchMessages();
   }, [selectedChat, user]);
 
-  // Function to send a new message
-  const sendMessage = async (messageContent) => {
+  // Handle sending a new message.
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return; // Do nothing if message is empty
     try {
       const config = {
         headers: {
@@ -311,23 +164,50 @@ export default function ChatBox({ onBack }) {
         },
       };
 
+      // Post the new message to the backend.
       const { data } = await axios.post(
         "http://localhost:5000/api/message",
-        { chatId: selectedChat._id, content: messageContent },
+        { chatId: selectedChat._id, content: newMessage },
         config
       );
 
+      // Append the newly sent message to the messages list.
       setMessages([...messages, data]);
+      setNewMessage("");
     } catch (error) {
       console.error("Failed to send message", error);
     }
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <ChatHeader chat={selectedChat} onBack={onBack} />
-      <MessageList messages={messages} />
-      <MessageInput onSend={sendMessage} />
+    <div className="chat-container">
+      <div className="messages-container">
+        {messages.map((message) => (
+          <div
+            key={message._id}
+            className={`message ${
+              message.sender && message.sender._id === user._id
+                ? "sent"
+                : "received"
+            }`}
+          >
+            {message.sender && message.sender.name && (
+              <div className="font-semibold">{message.sender.name}</div>
+            )}
+            <div>{message.content || message.text}</div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+      <form className="message-input" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type a message..."
+        />
+        <button type="submit">Send</button>
+      </form>
     </div>
   );
 }
