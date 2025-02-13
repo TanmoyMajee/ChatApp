@@ -1,6 +1,4 @@
 
-
-
 import React, { useEffect, useState, useRef } from "react";
 import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
@@ -10,19 +8,21 @@ import { ArrowLeft } from "lucide-react";
 
 export default function MobileChatBox({ onBack }) {
   const { selectedChat } = useChat();
-  const { user } = useUser();
+  const { user, socket } = useUser(); // Ensure you store the full socket instance in your context
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
 
-  // Function to auto-scroll to the bottom of the messages container
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  // Whenever messages update, scroll to the bottom.
+  // Join room when selectedChat and socket are available
   useEffect(() => {
-    scrollToBottom();
+    if (selectedChat && socket) {
+      socket.emit("join_room", selectedChat._id);
+    }
+  }, [selectedChat, socket]);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // Fetch messages whenever selectedChat or user changes.
@@ -31,9 +31,7 @@ export default function MobileChatBox({ onBack }) {
       if (!selectedChat) return;
       try {
         const config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
+          headers: { Authorization: `Bearer ${user.token}` },
         };
         const { data } = await axios.get(
           `http://localhost:5000/api/message/${selectedChat._id}`,
@@ -66,7 +64,6 @@ export default function MobileChatBox({ onBack }) {
         config
       );
 
-      // Append the newly sent message to the messages list.
       setMessages([...messages, data]);
       setNewMessage("");
     } catch (error) {
@@ -75,24 +72,25 @@ export default function MobileChatBox({ onBack }) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    // Ensure the container takes full viewport height
+    <div className="chat-container">
       {/* Fixed Header */}
-      <div className="sticky top-0 bg-white z-10 p-4 border-b border-gray-200 flex items-center">
+      <div className="chat-header">
         <Button variant="ghost" onClick={onBack} className="mr-2">
           <ArrowLeft size={24} />
         </Button>
-        <h2 className="text-xl font-bold">{selectedChat.chatName}</h2>
+        <h2 className="chat-title">{selectedChat.chatName}</h2>
       </div>
 
       {/* Scrollable Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 min-h-0 space-y-2">
+      <div className="messages-container">
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`p-2 border-b ${
+            className={`message ${
               message.sender && message.sender._id === user._id
-                ? "text-right"
-                : "text-left"
+                ? "sent"
+                : "received"
             }`}
           >
             {message.sender && message.sender.name && (
@@ -105,23 +103,14 @@ export default function MobileChatBox({ onBack }) {
       </div>
 
       {/* Fixed Message Input Field */}
-      <form
-        className="sticky bottom-0 bg-white z-10 p-4 border-t border-gray-200 flex"
-        onSubmit={handleSubmit}
-      >
+      <form className="message-input" onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Type your message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="flex-1 border border-gray-300 p-2 rounded-l focus:outline-none"
+          placeholder="Type a message..."
         />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 focus:outline-none"
-        >
-          Send
-        </button>
+        <button type="submit">Send</button>
       </form>
     </div>
   );
