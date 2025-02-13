@@ -62,7 +62,7 @@ export default function SignupPage() {
 
   const handleSignup = async () => {
 
-     if (!name || !email || !password || !confirmPassword) {
+     if (!name || !email || !password || !confirmPassword || profilePic) {
       toast({
         title: "Missing fields",
         description: "Please fill all the fields.",

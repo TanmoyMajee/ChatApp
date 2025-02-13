@@ -1,4 +1,5 @@
 
+
 import React, { useEffect } from "react";
 import SideDrawer from "../custom_components/SideDrawer";
 import ChatList from "../custom_components/ChatList";
@@ -6,10 +7,11 @@ import ChatBox from "../custom_components/ChatBox";
 import MobileChatBox from "../custom_components/MobileChatBox";
 import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
+import { io } from "socket.io-client";
 
 export default function HomePage() {
   const { selectedChat, fetchChats, setSelectedChat } = useChat();
-  const { user } = useUser();
+  const { user, setSocketID } = useUser();
 
   // Fetch chats when the user is available
   useEffect(() => {
@@ -18,8 +20,17 @@ export default function HomePage() {
     }
   }, [user, fetchChats]);
 
+  // Initialize socket and store the instance
+  useEffect(() => {
+    if (user) {
+      const socket = io("http://localhost:5000");
+      setSocketID(socket);
+    }
+  }, [user, setSocketID]);
+
   return (
-    <div className="min-h-screen flex flex-col">
+    // The outer container is now fixed to the viewport.
+    <div className="fixed inset-0 flex flex-col">
       <SideDrawer />
       {/* For medium and larger screens: show ChatList and ChatBox side by side */}
       <div className="hidden md:flex flex-1">
