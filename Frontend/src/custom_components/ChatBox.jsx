@@ -1,31 +1,59 @@
 
 
+
 import React, { useEffect, useState, useRef } from "react";
 import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
 import axios from "axios";
-// import "./ChatBox.css"; // Optional: if you prefer external CSS
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
-export default function ChatBox() {
+// Custom hook to detect mobile screens (width < 768px)
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < breakpoint);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [breakpoint]);
+  return isMobile;
+}
+
+export default function ChatBox({ onBack }) {
+  const isMobile = useIsMobile();
   const { selectedChat } = useChat();
-  const { user, socket } = useUser(); // Ensure you're using the full socket instance if available.
+  const { user, socket } = useUser(); // Ensure that your context stores the full socket instance in "socket"
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
 
-  // Join the room when a chat is selected
+  // Join the room when a chat is selected and socket is available.
   useEffect(() => {
     if (selectedChat && socket) {
       socket.emit("join_room", selectedChat._id);
     }
   }, [selectedChat, socket]);
 
-  // Auto-scroll to bottom whenever messages change.
+  // Listen for incoming messages.
+  useEffect(() => {
+    if (socket) {
+      socket.on("message_received", (data) => {
+        setMessages((prev) => [...prev, data]);
+      });
+      return () => {
+        socket.off("message_received");
+      };
+    }
+  }, [socket]);
+
+  // Auto-scroll to bottom whenever messages update.
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fetch messages when selectedChat or user changes.
+  // Fetch messages from the backend when the selected chat changes.
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedChat) return;
@@ -35,7 +63,6 @@ export default function ChatBox() {
             Authorization: `Bearer ${user.token}`,
           },
         };
-        // Ensure your backend URL is correct.
         const { data } = await axios.get(
           `http://localhost:5000/api/message/${selectedChat._id}`,
           config
@@ -45,14 +72,13 @@ export default function ChatBox() {
         console.error("Failed to fetch messages", error);
       }
     };
-
     fetchMessages();
   }, [selectedChat, user]);
 
   // Handle sending a new message.
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return; // Do nothing if message is empty
+    if (!newMessage.trim()) return;
     try {
       const config = {
         headers: {
@@ -61,15 +87,19 @@ export default function ChatBox() {
         },
       };
 
-      // Post the new message to the backend.
       const { data } = await axios.post(
         "http://localhost:5000/api/message",
         { chatId: selectedChat._id, content: newMessage },
         config
       );
-
-      // Append the newly sent message to the messages list.
-      setMessages([...messages, data]);
+      // Emit the message to the room via socket.
+      socket.emit("new_message", {
+        room: selectedChat._id,
+        content: newMessage,
+        sender: user,
+      });
+      // setMessages([...messages, data]);
+      // no need to update messages here, as the message will be received via socket.
       setNewMessage("");
     } catch (error) {
       console.error("Failed to send message", error);
@@ -78,11 +108,18 @@ export default function ChatBox() {
 
   return (
     <div className="chat-container bg-gray-50 dark:bg-gray-800">
-      {/* Fixed Chat Name Header */}
-      <div className="sticky top-0 bg-white dark:bg-gray-900 z-10 p-4 border-b border-gray-200 dark:border-gray-700 text-xl font-bold text-gray-800 dark:text-gray-100">
-        Chat Name: {selectedChat.chatName}
+      {/* Fixed Header */}
+      <div className="sticky top-0 bg-white dark:bg-gray-900 z-10 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
+        {isMobile && onBack && (
+          <Button variant="ghost" onClick={onBack} className="mr-2">
+            <ArrowLeft size={24} />
+          </Button>
+        )}
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
+          {selectedChat.chatName}
+        </h2>
       </div>
-      
+
       {/* Scrollable Messages Container */}
       <div className="messages-container flex-1 overflow-y-auto p-4 min-h-0 space-y-2">
         {messages.map((message) => (
@@ -117,7 +154,7 @@ export default function ChatBox() {
           placeholder="Type your message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="flex-1 border border-gray-300 dark:border-gray-600 p-2 rounded-l focus:outline-none bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100  "
+          className="flex-1 border border-gray-300 dark:border-gray-600 p-2 rounded-l focus:outline-none bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100"
         />
         <button
           type="submit"

@@ -189,6 +189,15 @@
   background-color: #0066cc;
 }
 
+.online-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #34d399;
+  /* Adjust the color as needed; this is a green tone */
+  border-radius: 50%;
+}
+
 /* Responsive tweaks if necessary */
 @media (max-width: 768px) {
   .chat-container {

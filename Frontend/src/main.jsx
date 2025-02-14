@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -9,7 +9,7 @@ import { ChatProvider } from './contextApi/ChatProvider'
 // import 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter>
      <ThemeProvider attribute="class">
       <UserProvider>
@@ -19,5 +19,5 @@ createRoot(document.getElementById('root')).render(
     </UserProvider>
       </ThemeProvider>
     </BrowserRouter>
-  </StrictMode>,
+  ,{/* </StrictMode> */}
 )

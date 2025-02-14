@@ -6,7 +6,8 @@ const UserContext = createContext();
 // const location = useLocation();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [socketId,setSocketID] = useState(null);
+  const [socket,setSocketID] = useState(null);
+  const [onlineUsers,setOnlineUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout , socketId,setSocketID}}>
+    <UserContext.Provider value={{ user, login, logout , socket,setSocketID,onlineUsers,setOnlineUsers}}>
       {children}
     </UserContext.Provider>
   );
