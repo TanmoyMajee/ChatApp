@@ -100,6 +100,7 @@ export default function ChatBox({ onBack }) {
       });
       // setMessages([...messages, data]);
       // no need to update messages here, as the message will be received via socket.
+      // update the input field to empty after sending the msg
       setNewMessage("");
     } catch (error) {
       console.error("Failed to send message", error);
