@@ -3,7 +3,7 @@ const http = require("http");
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { Socket } = require("dgram");
+// const { Socket } = require("dgram");
 const server = http.createServer(app);
 const io = new Server(server, { 
   cors : {
@@ -37,7 +37,7 @@ io.on('connection',(socket)=>{
 
   socket.on("new_message",(data)=>{
       // let chat = message.chat;
-       console.log("Received message:", data);
+      //  console.log("Received message:", data);
     // Broadcast the message to everyone in the room (including the sender, if needed)
     io.to(data.room).emit("message_received", data);
   })

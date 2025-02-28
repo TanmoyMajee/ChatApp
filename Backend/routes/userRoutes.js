@@ -10,3 +10,4 @@ router.post('/login', authuserFun);
 // both of these functions are in the userController.js file
 
 module.exports = router;
+ 

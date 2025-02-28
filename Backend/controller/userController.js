@@ -81,6 +81,8 @@ let allusersFun = asyncHandler(async (req, res) => {
   res.json(users);
 })
 
+
+
 module.exports = { registerFun , authuserFun, allusersFun};
 
 
