@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import SideDrawer from "../custom_components/SideDrawer";
+import Header from "../custom_components/Header";
 import ChatList from "../custom_components/ChatList";
 import ChatBox from "../custom_components/ChatBox"; // Unified ChatBox component
 import { useChat } from "../contextApi/ChatProvider";
@@ -39,12 +39,12 @@ export default function HomePage() {
         newsocket.disconnect();
       };
     }
-  }, [user, setSocketID, setOnlineUsers]);
+  }, [user, setSocketID]);
 
   return (
     // Outer container fixed to the viewport
     <div className="fixed inset-0 flex flex-col">
-      <SideDrawer />
+      <Header/>
       {/* Desktop layout: show ChatList and ChatBox side by side */}
       <div className="hidden md:flex flex-1">
         <div className="w-full md:w-1/3 border-r">
