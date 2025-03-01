@@ -1,18 +1,25 @@
 
-
 import React, { useState, useEffect } from "react";
 import { useChat } from "../contextApi/ChatProvider";
-import { formatDistanceToNow } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { useUser } from "../contextApi/UserContext";
-import '../App.css'
+import ChatListItem from "./ChatListItem";
+import CreateChat from "./CreateChat";
+import handleCreateChat from "./handleCreateChat"
+import "../App.css";
 
 export default function ChatList() {
-  const { chats, setSelectedChat } = useChat();
+  const { chats, setSelectedChat ,selectedChat } = useChat();
   const { user, onlineUsers } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredChats, setFilteredChats] = useState(chats);
+    const [showNewChatModal, setShowNewChatModal] = useState(false);
+const [selectedChatToggler,setselectedChatToggler] = useState(false);
 
+useEffect(()=>{
+  if(!selectedChat)setselectedChatToggler(true)
+    else setselectedChatToggler(false)
+},[setSelectedChat])
   useEffect(() => {
     if (searchTerm === "") {
       setFilteredChats(chats);
@@ -26,7 +33,7 @@ export default function ChatList() {
 
   return (
     <div className="p-4">
-      {/* Search Input at the Top */}
+      {/* Search Input */}
       <Input
         type="text"
         placeholder="Search chats..."
@@ -34,47 +41,35 @@ export default function ChatList() {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-4 w-full"
       />
-      <h2 className="text-xl font-bold mb-4">Chats</h2>
-      {filteredChats.map((chat) => {
-        let onlineIndicator = null;
 
-        // If this is a one-on-one chat (non-group chat), check online status.
-        if (!chat.isGroupChat) {
-          // Find the other participant (exclude current user).
-          const otherUser = chat.users.find((u) => u._id !== user._id);
-          const isOnline = onlineUsers.some(
-            (onlineUser) => onlineUser._id === otherUser?._id
-          );
-          if (isOnline) {
-            onlineIndicator = <span className="online-dot ml-2"></span>;
-          }
-          // console.log("Chat:", chat.chatName, "Other User:", otherUser, "isOnline:", isOnline);
+       {/* Header with Chats Title and Add Chat Button */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold">Chats</h2>
+        <button
+          className="bg-blue-500 text-white rounded-full p-2 shadow-lg text-2xl"
+          onClick={() => setShowNewChatModal(true)}
+        >
+          +
+        </button>
+      </div>
 
-        }
+      
+      {filteredChats.map((chat) => (
+        <ChatListItem
+          key={chat._id}
+          chat={chat}
+          user={user}
+          onlineUsers={onlineUsers}
+          setSelectedChat={setSelectedChat}
+        />
+      ))}
 
-        return (
-          <div
-            key={chat._id}
-            className="p-3 border-b flex items-center justify-between cursor-pointer hover:bg-gray-100 rounded-lg"
-            onClick={() => setSelectedChat(chat)}
-          >
-            <div>
-              <div className="font-semibold flex items-center">
-                {chat.chatName}
-                {onlineIndicator}
-              </div>
-              {chat.latestMessage && (
-                <div className="text-sm text-gray-500">
-                  {formatDistanceToNow(new Date(chat.latestMessage.createdAt), {
-                    addSuffix: true,
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })}
+
+
+      {/* New Chat Modal Placeholder */}
+  {showNewChatModal  && <CreateChat  onClose={() => setShowNewChatModal(false)} onCreateChat={handleCreateChat} />}
+
+
     </div>
   );
 }
-

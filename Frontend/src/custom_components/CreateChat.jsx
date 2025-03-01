@@ -323,7 +323,8 @@ const CreateChat = ({ onClose, onCreateChat }) => {
   const handleCreateChat = () => {
     if (selectedUsers.length === 0) return;
     if (selectedUsers.length === 1) {
-      onCreateChat(selectedUsers, null);
+      const OneToOneName = prompt("Enter Chat name:");
+      onCreateChat(selectedUsers, OneToOneName  );
     } else {
       const groupName = prompt("Enter group name:");
       onCreateChat(selectedUsers, groupName);
@@ -334,11 +335,13 @@ const CreateChat = ({ onClose, onCreateChat }) => {
   return (
     // Backdrop: covers the screen and listens for clicks to close the modal
     <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={onClose}>
+      {/* Backdrop: The outer <div> covers the entire screen. Its onClick={onClose} means that clicking anywhere on this backdrop will close the modal. */}
       {/* Modal Container: on mobile it covers full screen; on md+ it becomes a centered modal */}
       <div
         className="fixed inset-0 md:absolute md:inset-auto md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-1/3 md:h-3/4 bg-white dark:bg-gray-800 z-50 flex flex-col shadow-lg rounded-lg"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* In summary, attaching onClick={(e) => e.stopPropagation()} to the inner container prevents clicks within the modal from “bubbling up” and accidentally closing the modal when the backdrop is supposed to listen for outside clicks */}
         {/* Header */}
         <div className="flex items-center justify-between p-4 bg-green-500 dark:bg-green-700">
           <h2 className="text-xl text-white font-bold">New Chat</h2>
