@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { useUser } from "../contextApi/UserContext";
 import ChatListItem from "./ChatListItem";
 import CreateChat from "./CreateChat";
-import handleCreateChat from "./handleCreateChat"
 import "../App.css";
 
 export default function ChatList() {
@@ -67,7 +66,9 @@ useEffect(()=>{
 
 
       {/* New Chat Modal Placeholder */}
-  {showNewChatModal  && <CreateChat  onClose={() => setShowNewChatModal(false)} onCreateChat={handleCreateChat} />}
+     {showNewChatModal && (
+        <CreateChat onClose={() => setShowNewChatModal(false)} />
+      )}
 
 
     </div>

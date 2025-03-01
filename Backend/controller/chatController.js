@@ -3,11 +3,11 @@ const ChatModel = require('../models/chatModel');
 const UserModel = require('../models/userModel');
 
 const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
-      const {receiverID} = req.body;
+      const {receiverID , ChatName} = req.body;
 
-      if(!receiverID){
+      if(!receiverID || !ChatName){
         res.status(400);
-        throw new Error('Receiver is required');
+        throw new Error('Receiver id and ChatName   required');
       }
       // now find the chat between the user and the receiver is already created or not
       // by checking the users array in the chat , as this array will have only 2 users
@@ -17,6 +17,8 @@ const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
       // in ischat we are geting both the user details and the latest message details
       // but to know the sender details of the latest message we need to populate the latest message again
       var ischat = await ChatModel.findOne({ 
+        // here we are cheking if ther exists a one o one chat betwn both of then 
+        // then no need to crate a new chat
         users: { $all: [req.user._id, receiverID] }
       }).populate('users','-password').populate('latestMessage');
 
@@ -32,7 +34,7 @@ const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
         // create a chat between the user and the receiver
         try{
           const chat = await ChatModel.create({
-            chatName: 'One o One Chat',
+            chatName: ChatName,
             users: [req.user._id, receiverID],
             latestMessage: null,
             groupChat: false,
@@ -95,7 +97,7 @@ const createGroupChat= asyncHandler(async (req, res) => {
       groupChat: true,
       groupAdmins: [req.user._id]
     })
-    // this fucllchat is still confusing 
+    // 
     const chatINFO = await ChatModel.findById(chat._id).populate('users','-password').
     populate('groupAdmins','-password')
     .populate('latestMessage');
