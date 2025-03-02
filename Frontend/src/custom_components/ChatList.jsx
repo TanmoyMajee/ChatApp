@@ -13,12 +13,12 @@ export default function ChatList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredChats, setFilteredChats] = useState(chats);
     const [showNewChatModal, setShowNewChatModal] = useState(false);
-const [selectedChatToggler,setselectedChatToggler] = useState(false);
+// const [selectedChatToggler,setselectedChatToggler] = useState(false);
 
-useEffect(()=>{
-  if(!selectedChat)setselectedChatToggler(true)
-    else setselectedChatToggler(false)
-},[setSelectedChat])
+// useEffect(()=>{
+//   if(!selectedChat)setselectedChatToggler(true)
+//     else setselectedChatToggler(false)
+// },[setSelectedChat])
   useEffect(() => {
     if (searchTerm === "") {
       setFilteredChats(chats);
@@ -31,7 +31,7 @@ useEffect(()=>{
   }, [searchTerm, chats]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 h-[calc(100vh-100px)] flex flex-col">
       {/* Search Input */}
       <Input
         type="text"
@@ -52,9 +52,10 @@ useEffect(()=>{
         </button>
       </div>
 
-      
+      <div className="flex-1 overflow-y-auto">
       {filteredChats.map((chat) => (
-        <ChatListItem
+
+              <ChatListItem
           key={chat._id}
           chat={chat}
           user={user}
@@ -62,6 +63,7 @@ useEffect(()=>{
           setSelectedChat={setSelectedChat}
         />
       ))}
+      </div>
 
 
 

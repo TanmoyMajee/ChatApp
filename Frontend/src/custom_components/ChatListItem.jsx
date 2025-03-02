@@ -47,7 +47,7 @@ function ChatListItem({ chat, user, onlineUsers, setSelectedChat }) {
   let onlineIndicator = null;
 
   // For one-on-one chats, check if the other user is online.
-  if (!chat.isGroupChat) {
+  if (!chat.isGroupChat && user && chat.users) {
     const otherUser = chat.users.find((u) => u._id !== user._id);
     const isOnline = onlineUsers.some(
       (onlineUser) => onlineUser._id === otherUser?._id
