@@ -256,7 +256,6 @@ export default function SignupPage() {
           </div>
         </CardContent>
       </Card>
-      <Toaster />
     </div>
   );
 }

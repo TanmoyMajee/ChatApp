@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import UserContext from "@/contextApi/UserContext";
 
 export default function Login() {
@@ -107,7 +106,6 @@ export default function Login() {
           </div>
         </CardContent>
       </Card>
-      <Toaster />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import ChatList from "../custom_components/ChatList";
 import ChatBox from "../custom_components/ChatBox"; // Unified ChatBox component
 import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
-import { Toaster } from "@/components/ui/toaster";
 import { io } from "socket.io-client";
 
 export default function HomePage() {
@@ -69,7 +68,6 @@ export default function HomePage() {
           <ChatList />
         )}
       </div>
-        <Toaster />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import SignupPage from './pages/SignupPage'
 import  Home  from './pages/HomePg'
 import { useUser } from "./contextApi/UserContext"
 import { Navigate } from 'react-router-dom'
+import { Toaster } from "@/components/ui/toaster";
 // import {UserProvider} from './'
 
 function App() {
@@ -18,7 +19,6 @@ function App() {
     }
     return children;
   };
-  // const [count, setCount] = useState(0)
   return (
     <>
       
@@ -26,15 +26,11 @@ function App() {
         <Route path='/' Component={SignupPage}/>
         <Route path='/login' Component={Login}/>
          <Route path='/home' Component={Home}/>
-          {/* <Route
-            index
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          /> */}
+  
           </Routes>
+          <Toaster/>
+           {/* //  By placing the global <Toaster /> in the App, toast messages remain visible all 
+           // other componet where we use the useToast , it will toast the msg in which page i am currently present */}
     </>
   )
 }
