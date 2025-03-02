@@ -10,6 +10,7 @@ const registerFun = asyncHandler(async (req, res) => {
   if(!name || !email || !password || !pic){
     throw new Error('Please fill all the fields');
   }
+  // console.log(name,email,password,pic)
   const userExist = await userModel.findOne({email});
     if(userExist){
       throw new Error('User already exist');
@@ -22,7 +23,7 @@ const registerFun = asyncHandler(async (req, res) => {
       password:hashPassword,
       pic
   }); 
-
+// console.log(newUser,"CREATED")
   if(newUser){
     res.status(201).json({
       _id: newUser._id,

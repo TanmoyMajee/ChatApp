@@ -22,7 +22,7 @@ export default function SignupPage() {
   // Form states
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  // const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -62,10 +62,12 @@ export default function SignupPage() {
 
   const handleSignup = async () => {
 
-     if (!name || !email || !password || !confirmPassword || profilePic) {
+    console.log(name,email,password , confirmPassword ,profilePic)
+
+     if (!name || !email || !password || !confirmPassword || !profilePic) {
       toast({
         title: "Missing fields",
-        description: "Please fill all the fields.",
+        description: "Please fill all the fields Frontend.",
         variant: "destructive",
       });
       return;
@@ -104,15 +106,16 @@ export default function SignupPage() {
       }
 
       // Send data to backend
-      const signupData = {
-        name,
-        email,
-        password,
-        pic: imageUrl,  // Using 'pic' to match your backend model
-      };
+      // const signupData = {
+      //   name,
+      //   email,
+      //   password,
+      //   pic: imageUrl,  // Using 'pic' to match your backend model
+      // };
+      // console.log(signupData)
       // const pic : profilePic;
       const response = await axios.post(" http://localhost:5000/api/users",
-         {name,email,password,pic:profilePic}, {
+         {name,email,password,pic:imageUrl}, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -124,7 +127,7 @@ export default function SignupPage() {
           login(response.data);
          toast({
           title: "Signup successful",
-          description: "Please login.",
+          description: "Redirect to Home Page.",
           variant: "default",
         });
         // Redirect to chat page
