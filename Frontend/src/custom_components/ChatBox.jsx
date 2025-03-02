@@ -29,6 +29,8 @@ export default function ChatBox({ onBack }) {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
 
+  // console.log(messages.map(m => m._id));
+
   // Join the room when a chat is selected and socket is available.
   useEffect(() => {
     if (selectedChat && socket) {
@@ -107,6 +109,7 @@ export default function ChatBox({ onBack }) {
     }
   };
 
+
   return (
     <div className="chat-container bg-gray-50 dark:bg-gray-800">
       {/* Fixed Header */}
@@ -123,9 +126,9 @@ export default function ChatBox({ onBack }) {
 
       {/* Scrollable Messages Container */}
       <div className="messages-container flex-1 overflow-y-auto p-4 min-h-0 space-y-2">
-        {messages.map((message) => (
+        {messages.map((message,indx) => (
           <div
-            key={message._id}
+            key={message._id || indx}
             className={`p-2 border-b ${
               message.sender && message.sender._id === user._id
                 ? "text-right"
@@ -167,3 +170,9 @@ export default function ChatBox({ onBack }) {
     </div>
   );
 }
+
+
+// ChatBox.jsx:127 
+//  Each child in a list should have a unique "key" prop.
+
+// Check the render method of `ChatBox`. See https://react.dev/link/warning-keys for more information.
