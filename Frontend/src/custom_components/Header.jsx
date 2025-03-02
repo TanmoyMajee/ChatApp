@@ -32,7 +32,7 @@ export default function Header() {
        {
         isShowingProfile && (
            <div className="relative">
-            <Profile />
+            <Profile onClose={()=>{setIsShowingProfile(false)}} />
           </div>
         )
        }
