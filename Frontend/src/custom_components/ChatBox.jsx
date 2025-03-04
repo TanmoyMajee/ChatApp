@@ -6,7 +6,8 @@ import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft , Menu } from "lucide-react";
+import ChatMenu from "./ChatMenu";
 
 // Custom hook to detect mobile screens (width < 768px)
 function useIsMobile(breakpoint = 768) {
@@ -28,7 +29,7 @@ export default function ChatBox({ onBack }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
-
+  const [showMenu,setShowMenu] = useState(false)
   // console.log(messages.map(m => m._id));
 
   // Join the room when a chat is selected and socket is available.
@@ -109,8 +110,14 @@ export default function ChatBox({ onBack }) {
     }
   };
 
+  const toggleMenu = ()=>{
+    setShowMenu((prev) => !prev);
+    console.log("Toggle")
+  }
+
 
   return (
+    
     <div className="chat-container bg-gray-50 dark:bg-gray-800">
       {/* Fixed Header */}
       <div className="sticky top-0 bg-white dark:bg-gray-900 z-10 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
@@ -122,7 +129,14 @@ export default function ChatBox({ onBack }) {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
           {selectedChat.chatName}
         </h2>
+         <Button variant="ghost" className="ml-auto" onClick={toggleMenu}>
+        <Menu size={24} className="text-gray-800 dark:text-gray-100" />
+      </Button>
       </div>
+
+      {
+        showMenu && <ChatMenu chat={selectedChat} closeMenu={()=> setShowMenu(false)} />
+      }
 
       {/* Scrollable Messages Container */}
       <div className="messages-container flex-1 overflow-y-auto p-4 min-h-0 space-y-2">

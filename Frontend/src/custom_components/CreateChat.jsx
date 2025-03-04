@@ -14,7 +14,7 @@ const CreateChat = ({ onClose }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUsers, setSelectedUser] = useState([]);
 
   // Filter users based on the search term
   useEffect(() => {
@@ -51,9 +51,9 @@ const CreateChat = ({ onClose }) => {
   // Toggle user selection
   const handleUserSelect = (user) => {
     if (selectedUsers.find((u) => u._id === user._id)) {
-      setSelectedUsers(selectedUsers.filter((u) => u._id !== user._id));
+      setSelectedUser(selectedUsers.filter((u) => u._id !== user._id));
     } else {
-      setSelectedUsers([...selectedUsers, user]);
+      setSelectedUser([...selectedUsers, user]);
     }
   };
 
@@ -92,6 +92,8 @@ const CreateChat = ({ onClose }) => {
     }
     // Set the selected chat to the newly created (or retrieved) chat object
     console.log("ResPonse After creating New Chat : ",response)
+    console.log(response.data._id)
+    setSelectedChat(response.data)
     if(response.data.latestMessage){
           toast({
         title: "Can't Crate a new Chat",
