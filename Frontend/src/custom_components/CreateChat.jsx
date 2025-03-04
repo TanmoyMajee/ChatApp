@@ -97,11 +97,17 @@ const CreateChat = ({ onClose }) => {
     if(response.data.latestMessage){
           toast({
         title: "Can't Crate a new Chat",
-        description: "As Chat with this user is exists , Redirect to that"
+        description: `As Chat with this user is exists , Redirect to that : ${response.data.chatName}`
         // variant: "destructive",
       });
       //  By placing the global <Toaster /> in the Home page, toast messages remain visible even after the CreateChat modal closes. as this create chat will close instantly and we dont want to give toast here
       // console.log("Toast")
+    }else{
+       toast({
+        title: "Chat Created",
+        description: `Redirect to caht ${response.data.chatName}`
+        // variant: "destructive"5665657465
+      });
     }
     // if respone lastmsg was not null then give a toast that alredy a chat exists and u will redirect to that
     // setSelectedChat(response.data);
