@@ -52,11 +52,6 @@ const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
 });
 
 const getChats = asyncHandler(async (req, res) => {
-  // if(!req.user){
-  //   res.status(400);
-  //   throw new Error('User not found');
-  // }
-  // no need of the above code as we are using the protect middleware
    try {
       var allChat = await  ChatModel.find({ users: req.user._id })
      .populate('users','-password')
@@ -191,7 +186,46 @@ const removeGroupUserFn = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { one_to_one_accessChatFun , getChats,createGroupChat,renameGroup,addGroupUser,removeGroupUserFn};
+const leaveGroupFn = asyncHandler(async (req,res)=>{
+    const {chatId} = req.body;
+    if(!chatId){
+       res.status(400);
+      throw new Error('Chat ID is required');
+    }
+    console.log(chatId)
+    // now find the chat in which he is present , then pull him form the user array
+    try {
+       const UpdatedChat = await ChatModel.findByIdAndUpdate(
+        chatId,{$pull : { users: req.user._id }} , {new : true}).populate('users','-password').populate('groupAdmins','-password').populate('latestMessage');
+
+         if(!UpdatedChat){
+          // now send the updatad caht list no the caht itsel
+        res.status(400);
+        throw new Error('No Group chat found');
+      }else{
+              console.log("User is leaves form this gorop", UpdatedChat)
+    //             var allChat = await  ChatModel.find({ users: req.user._id })
+    //  .populate('users','-password')
+    //  .populate('groupAdmins','-password')
+    //  .populate('latestMessage')
+    //  .sort({ updatedAt: -1 });  // sort the chat by the latest updated chat
+    // //  now again populate the latest message to get the sender details of the latest message
+    // //  as the latest message is a message model so we need to populate the latest message again to get the sender details of the latest message
+    // allChat = await UserModel.populate(allChat, { 
+    //     path: 'latestMessage.sender',
+    //     select: '-password'  
+    // })
+        res.status(201).send(UpdatedChat);
+      }
+    } catch (error) {
+      res.status(400);
+      console.log("Error while remove group  ",error)
+    throw new Error('Failed to remove the user to the group');
+    }
+
+})
+
+module.exports = { one_to_one_accessChatFun , getChats,createGroupChat,renameGroup,addGroupUser,removeGroupUserFn , leaveGroupFn };
 
 
 //  why we cant directly use the receiver id to get the lastChat msg user 

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const protect = require('../middleware/authMiddleware');
 const isGroupAdmin = require('../middleware/isGroupAdmin');
-const { one_to_one_accessChatFun,getChats,createGroupChat,renameGroup ,addGroupUser, removeGroupUser, removeGroupUserFn} = require('../controller/chatController');
+const { one_to_one_accessChatFun,getChats,createGroupChat,renameGroup ,addGroupUser, removeGroupUser, removeGroupUserFn , leaveGroupFn} = require('../controller/chatController');
 
 
 router.post('/CreateOneToOneChat',protect, one_to_one_accessChatFun); // this is the route will be to create a chat
@@ -11,5 +11,6 @@ router.post('/CreateGroup',protect, createGroupChat); // this is the route to cr
 router.put('/groupRename', protect,isGroupAdmin,renameGroup); // this is the route to rename a group chat
  router.put('/removeGroupUser',protect,isGroupAdmin, removeGroupUserFn); // this is the route to remove a group chat
  router.put('/addGroupUser',protect,isGroupAdmin, addGroupUser); // this is the route to add a user to a group
+ router.put('/leaveGroup' , protect, leaveGroupFn ) // to leave from goup [ current login user ]
 
 module.exports = router;
