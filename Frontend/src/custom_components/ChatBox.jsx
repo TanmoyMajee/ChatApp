@@ -148,7 +148,7 @@ export default function ChatBox({ onBack }) {
 
       {/* Scrollable Messages Container */}
       <div className="messages-container flex-1 overflow-y-auto p-4 min-h-0 space-y-2">
-        {messages.map((message,indx) => (
+        {messages.map ((message,indx) => (
           <div
             key={message._id || indx}
             className={`p-2 border-b ${
@@ -194,7 +194,3 @@ export default function ChatBox({ onBack }) {
 }
 
 
-// ChatBox.jsx:127 
-//  Each child in a list should have a unique "key" prop.
-
-// Check the render method of `ChatBox`. See https://react.dev/link/warning-keys for more information.

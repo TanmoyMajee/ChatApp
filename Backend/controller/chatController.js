@@ -3,11 +3,11 @@ const ChatModel = require('../models/chatModel');
 const UserModel = require('../models/userModel');
 
 const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
-      const {receiverID , ChatName} = req.body;
+      const {receiverID } = req.body;
 
-      if(!receiverID || !ChatName){
+      if(!receiverID ){
         res.status(400);
-        throw new Error('Receiver id and ChatName   required');
+        throw new Error('Receiver id is required');
       }
       // now find the chat between the user and the receiver is already created or not
       // by checking the users array in the chat , as this array will have only 2 users
@@ -19,7 +19,8 @@ const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
       var ischat = await ChatModel.findOne({ 
         // here we are cheking if ther exists a one o one chat betwn both of then 
         // then no need to crate a new chat
-        users: { $all: [req.user._id, receiverID] }
+        users: { $all: [req.user._id, receiverID] },
+         groupChat: false
       }).populate('users','-password').populate('latestMessage');
 
       //  here as the latest message is a message model so we need to populate the latest message again to get the sender details of the latest message
@@ -34,7 +35,7 @@ const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
         // create a chat between the user and the receiver
         try{
           const chat = await ChatModel.create({
-            chatName: ChatName,
+            chatName: "One O one ",
             users: [req.user._id, receiverID],
             latestMessage: null,
             groupChat: false,

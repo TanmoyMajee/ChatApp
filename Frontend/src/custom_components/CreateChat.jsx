@@ -64,12 +64,12 @@ const CreateChat = ({ onClose }) => {
     let response;
     if (selectedUsers.length === 1) {
       // One-to-one chat: use the receiverID of the selected contact
-       const ChatName= prompt("Enter Chat name With New User:");
+      //  const ChatName= prompt("Enter Chat name With New User:");
       const receiverID = selectedUsers[0]._id;
       // NOTE: Replace the endpoint URL with your one-to-one chat route
       response = await axios.post(
         "http://localhost:5000/api/chats/CreateOneToOneChat",
-        { receiverID , ChatName},
+        { receiverID },
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
@@ -91,6 +91,7 @@ const CreateChat = ({ onClose }) => {
       );
     }
     // Set the selected chat to the newly created (or retrieved) chat object
+    // here we need to append the newly created caht into chat list *********
     console.log("ResPonse After creating New Chat : ",response)
     console.log(response.data._id)
     setSelectedChat(response.data)
