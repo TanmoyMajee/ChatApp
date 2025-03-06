@@ -115,6 +115,14 @@ export default function ChatBox({ onBack }) {
     console.log("Toggle")
   }
 
+  // Derive ChatName: if it's a one-to-one chat, use the other user's name; otherwise, use chatName.
+  let ChatName = selectedChat.chatName;
+  if (!selectedChat.groupChat && user && selectedChat.users) {
+    const otherUser = selectedChat.users.find((u) => u._id !== user._id);
+    if (otherUser) {
+      ChatName = otherUser.name;
+    }
+  }
 
   return (
     
@@ -127,7 +135,7 @@ export default function ChatBox({ onBack }) {
           </Button>
         )}
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-          {selectedChat.chatName}
+          {ChatName}
         </h2>
          <Button variant="ghost" className="ml-auto" onClick={toggleMenu}>
         <Menu size={24} className="text-gray-800 dark:text-gray-100" />

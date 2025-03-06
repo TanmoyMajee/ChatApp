@@ -5,15 +5,22 @@ import { formatDistanceToNow } from "date-fns";
 
 function ChatListItem({ chat, user, onlineUsers, setSelectedChat }) {
   let onlineIndicator = null;
+  
+  let chatTitle = chat.chatName;
 
   // For one-on-one chats, check if the other user is online.
-  if (!chat.isGroupChat && user && chat.users) {
+  if (!chat.groupChat && user && chat.users) {
     const otherUser = chat.users.find((u) => u._id !== user._id);
+    if (otherUser) {
+      chatTitle = otherUser.name;
+    }
     const isOnline = onlineUsers.includes(otherUser?._id);
     if (isOnline) {
       onlineIndicator = <span className="online-dot ml-2"></span>;
     }
   }
+
+
 
   return (
     <div
@@ -24,7 +31,7 @@ function ChatListItem({ chat, user, onlineUsers, setSelectedChat }) {
     >
       <div>
         <div className="font-semibold flex items-center text-gray-900 dark:text-gray-100">
-          {chat.chatName}
+          {chatTitle}
           {onlineIndicator}
         </div>
         {chat.latestMessage && (

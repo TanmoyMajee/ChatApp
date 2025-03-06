@@ -203,18 +203,10 @@ const leaveGroupFn = asyncHandler(async (req,res)=>{
         res.status(400);
         throw new Error('No Group chat found');
       }else{
-              console.log("User is leaves form this gorop", UpdatedChat)
-    //             var allChat = await  ChatModel.find({ users: req.user._id })
-    //  .populate('users','-password')
-    //  .populate('groupAdmins','-password')
-    //  .populate('latestMessage')
-    //  .sort({ updatedAt: -1 });  // sort the chat by the latest updated chat
-    // //  now again populate the latest message to get the sender details of the latest message
-    // //  as the latest message is a message model so we need to populate the latest message again to get the sender details of the latest message
-    // allChat = await UserModel.populate(allChat, { 
-    //     path: 'latestMessage.sender',
-    //     select: '-password'  
-    // })
+              // console.log("User is leaves form this gorop", UpdatedChat)
+              // send the deleted chat object again , 
+              // forntedn map on the previoius chat list and remokve this chat so the chat list will be updated
+  
         res.status(201).send(UpdatedChat);
       }
     } catch (error) {

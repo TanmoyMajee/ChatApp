@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
+import { useToast } from "@/hooks/use-toast";
 // A simple MenuItem component for clarity and reusability.
 const MenuItem = ({ children, onClick }) => (
   <div 
@@ -14,6 +15,7 @@ const MenuItem = ({ children, onClick }) => (
 );
 
 export default function ChatMenu({ chat, closeMenu }) {
+   const { toast } = useToast();
    const { setChats ,setSelectedChat } = useChat();
     const { user, socket } = useUser();
   // Common actions can be placed here.
@@ -55,10 +57,15 @@ export default function ChatMenu({ chat, closeMenu }) {
         {chatId : chat._id} ,config
       );
       // console.log("Now the updated caht listd  will be :  ", UpdatedChat)
-       console.log(" remove this chat from the chat list in frontend :  ", UpdatedChat)
+      //  console.log(" remove this chat from the chat list in frontend :  ", UpdatedChat)
       setSelectedChat(null);
       // setChats(UpdatedAllChat);
       setChats(prevChats => prevChats.filter(c => c._id !== UpdatedChat._id));
+        toast({
+        title: "Group Leaved",
+        description: `Leaved From Group ${UpdatedChat.data.chatName}`
+        // variant: "destructive"5665657465
+      });
       
     } catch (error) {
       console.error("Failed to fetch chats , Eror from backend", error);
