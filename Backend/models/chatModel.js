@@ -19,7 +19,11 @@ const chatModel = mongoose.Schema({
   groupAdmins: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }]
+  }],
+   GroupImage: {
+    type: String,
+     default: 'https://up.yimg.com/ib/th?id=OIP.TOPp5xCWxCUYo6PoL9V31QHaFC&pid=Api&rs=1&c=1&qlt=95&w=148&h=101'
+  },
 },{timestamps: true});
 
 const ChatModel = mongoose.model('Chat', chatModel);
