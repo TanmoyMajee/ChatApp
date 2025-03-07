@@ -15,10 +15,11 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: true, 
   },
   image: {
-    type: String
+    type: String,
+     default: 'https://up.yimg.com/ib/th?id=OIP.PoS7waY4-VeqgNuBSxVUogAAAA&pid=Api&rs=1&c=1&qlt=95&w=114&h=114'
   },
 }, { timestamps: true });
 
