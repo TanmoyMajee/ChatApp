@@ -21,7 +21,7 @@ const registerFun = asyncHandler(async (req, res) => {
       name,
       email,
       password:hashPassword,
-      pic
+      image:pic
   }); 
 // console.log(newUser,"CREATED")
   if(newUser){
