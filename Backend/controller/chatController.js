@@ -58,7 +58,7 @@ const getChats = asyncHandler(async (req, res) => {
      .populate('users','-password')
      .populate('groupAdmins','-password')
      .populate('latestMessage')
-     .sort({ updatedAt: -1 });  // sort the chat by the latest updated chat
+     .sort({ updatedAt: -1 });  // sort the chat by the latest updated chat  fgg
     //  now again populate the latest message to get the sender details of the latest message
     //  as the latest message is a message model so we need to populate the latest message again to get the sender details of the latest message
     allChat = await UserModel.populate(allChat, { 
