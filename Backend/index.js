@@ -10,7 +10,7 @@ const messageRoutes = require('./routes/messageRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 app.use(express.json());
 app.use(cors(
-  { 
+  {
     origin : "*",
     methods : ["POST","GET","PUT"],
     credentials : true
@@ -21,19 +21,19 @@ connectDB();
 
 app.get('/', (req, res) => {
   res.json('Hello World');
-   
+    
 });
 
-app.use("/api/users", userRoutes);
-app.use("/api/chats", chatRoutes); 
-app.use("/api/message",messageRoutes);
-// this will work if user enterd any other route
+app.use("/api/users", userRoutes); 
+app.use("/api/chats", chatRoutes);  
+app.use("/api/message",messageRoutes); 
+// this will work if user enterd any other route fg
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`); 
 });
 
   //  chek if the user is already in the group or not while adding the user to the group

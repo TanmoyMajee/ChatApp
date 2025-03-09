@@ -21,7 +21,7 @@ export default function HomePage() {
   // Initialize socket and store the instance (runs only when user changes)
   useEffect(() => {
     if (user) {
-      const newsocket = io("", {
+      const newsocket = io("https://chatapp-backend-2qvt.onrender.com", {
         query: { userId: user._id },
       });
       setSocketID(newsocket);
