@@ -37,7 +37,7 @@ const CreateChat = ({ onClose }) => {
             Authorization: `Bearer ${user.token}`,
           },
         };
-        const { data } = await axios.get("http://localhost:5000/api/users", config);
+        const { data } = await axios.get("/api/users", config);
         const filteredData = data.filter(u => u._id !== user._id);
         setAllUsers(filteredData);
       } catch (error) {
@@ -68,7 +68,7 @@ const CreateChat = ({ onClose }) => {
       const receiverID = selectedUsers[0]._id;
       // NOTE: Replace the endpoint URL with your one-to-one chat route
       response = await axios.post(
-        "http://localhost:5000/api/chats/CreateOneToOneChat",
+        "/api/chats/CreateOneToOneChat",
         { receiverID },
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -79,7 +79,7 @@ const CreateChat = ({ onClose }) => {
       const groupName = prompt("Enter group name:");
       // NOTE: Replace the endpoint URL with your group chat route
       response = await axios.post(
-        "http://localhost:5000/api/chats/CreateGroup",
+        "/api/chats/CreateGroup",
         {
           chatName: groupName,
           // Send only the _id of each selected user

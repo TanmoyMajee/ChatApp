@@ -21,7 +21,7 @@ export default function HomePage() {
   // Initialize socket and store the instance (runs only when user changes)
   useEffect(() => {
     if (user) {
-      const newsocket = io("http://localhost:5000", {
+      const newsocket = io("", {
         query: { userId: user._id },
       });
       setSocketID(newsocket);

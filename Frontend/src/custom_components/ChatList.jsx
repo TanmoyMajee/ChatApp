@@ -76,4 +76,3 @@ export default function ChatList() {
     </div>
   );
 }
-// if its a sigle chat then chat name will be the other user name

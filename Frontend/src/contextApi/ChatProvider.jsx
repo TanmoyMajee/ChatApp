@@ -16,7 +16,7 @@ export const ChatProvider = ({ children }) => {
           Authorization: `Bearer ${userToken}`,
         },
       };
-      const { data } = await axios.get("http://localhost:5000/api/chats", config);
+      const { data } = await axios.get("/api/chats", config);
       setChats(data);
     } catch (error) {
       console.error("Failed to fetch chats", error);

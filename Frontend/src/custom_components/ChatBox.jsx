@@ -67,7 +67,7 @@ export default function ChatBox({ onBack }) {
           },
         };
         const { data } = await axios.get(
-          `http://localhost:5000/api/message/${selectedChat._id}`,
+          `/api/message/${selectedChat._id}`,
           config
         );
         setMessages(data);
@@ -91,7 +91,7 @@ export default function ChatBox({ onBack }) {
       };
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/message",
+        "/api/message",
         { chatId: selectedChat._id, content: newMessage },
         config
       );

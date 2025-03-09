@@ -114,7 +114,7 @@ export default function SignupPage() {
       // };
       // console.log(signupData)
       // const pic : profilePic;
-      const response = await axios.post(" http://localhost:5000/api/users",
+      const response = await axios.post(" /api/users",
          {name,email,password,pic:imageUrl}, {
         headers: {
           "Content-Type": "application/json",
