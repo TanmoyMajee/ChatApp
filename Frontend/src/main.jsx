@@ -4,7 +4,7 @@ import './index.css';
 import App from './App.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
-import { UserProvider } from './contextAPI/UserContext';
+import { UserProvider } from './contextApi/UserContext';
 import { ChatProvider } from './contextApi/ChatProvider';
 
 createRoot(document.getElementById('root')).render(
