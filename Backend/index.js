@@ -9,13 +9,12 @@ const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 app.use(express.json());
-app.use(cors(
-  {
-    origin : "*",
-    methods : ["POST","GET","PUT"],
-    credentials : true
-  }
-));
+app.use(cors({
+  origin: ["http://localhost:3000", "https://chatapp-frontend-y7yg.onrender.com"],
+  methods: ["POST", "GET", "PUT"],
+  credentials: true,
+}));
+
 const connectDB = require('./config/db');
 connectDB();
 
