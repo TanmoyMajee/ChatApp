@@ -9,7 +9,13 @@ const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 app.use(express.json());
-app.use(cors());
+app.use(cors(
+  { 
+    origin : "*",
+    methods : ["POST","GET","PUT"],
+    credentials : true
+  }
+));
 const connectDB = require('./config/db');
 connectDB();
 
