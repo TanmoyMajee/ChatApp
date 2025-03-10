@@ -16,7 +16,7 @@ export default function HomePage() {
     if (user) {
       fetchChats(user.token);
     }
-  }, [user, fetchChats]);
+  }, [user]);
 
   // Initialize socket and store the instance (runs only when user changes)
   useEffect(() => {
