@@ -1,5 +1,5 @@
 // ChatProvider.jsx
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 const ChatContext = createContext();
@@ -9,19 +9,23 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
 
   // Function to fetch chats for the user
-  const fetchChats = async (userToken) => {
+  
+      const fetchChats = async (userToken) => {
     try {
       const config = {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
       };
-      const { data } = await axios.get("/api/chats", config);
+       const backendURL = process.env.REACT_APP_BACKEND_URL || "";
+      const { data } = await axios.get(`${backendURL}/api/chats`, config);
       setChats(data);
     } catch (error) {
       console.error("Failed to fetch chats", error);
     }
   };
+
+
 
   return (
     <ChatContext.Provider
