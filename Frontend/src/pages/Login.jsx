@@ -30,7 +30,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-        const backendURL = process.env.REACT_APP_BACKEND_URL || "";
+        const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
       const response = await axios.post(`${backendURL}/api/users/login`, {
         email,
         password,

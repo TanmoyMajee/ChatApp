@@ -37,7 +37,8 @@ const CreateChat = ({ onClose }) => {
             Authorization: `Bearer ${user.token}`,
           },
         };
-        const { data } = await axios.get("/api/users", config);
+         const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+        const { data } = await axios.get(`${backendURL}/api/users`, config);
         const filteredData = data.filter(u => u._id !== user._id);
         setAllUsers(filteredData);
       } catch (error) {

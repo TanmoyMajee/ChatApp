@@ -17,7 +17,7 @@ export const ChatProvider = ({ children }) => {
           Authorization: `Bearer ${userToken}`,
         },
       };
-       const backendURL = process.env.REACT_APP_BACKEND_URL || "";
+       const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
       const { data } = await axios.get(`${backendURL}/api/chats`, config);
       setChats(data);
     } catch (error) {
