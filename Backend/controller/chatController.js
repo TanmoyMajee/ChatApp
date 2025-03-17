@@ -4,7 +4,7 @@ const UserModel = require('../models/userModel');
 
 const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
       const {receiverID } = req.body;
-
+      console.log(req.body)
       if(!receiverID ){
         res.status(400);
         throw new Error('Receiver id is required');
@@ -45,6 +45,7 @@ const one_to_one_accessChatFun = asyncHandler(async (req, res) => {
           const fullChat = await ChatModel.findById(chat._id).populate('users','-password').populate('latestMessage');
           res.status(201).send(fullChat);
        }catch(error){
+        console.log("Error while creating chat ",error)
         res.status(400);
         throw new Error('Chat creation failed');
        }

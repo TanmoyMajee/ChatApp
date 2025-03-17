@@ -53,7 +53,8 @@ export default function ChatMenu({ chat, closeMenu }) {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const UpdatedChat  = await axios.put("/api/chats/leaveGroup", 
+       const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+      const UpdatedChat  = await axios.put(`${backendURL}/api/chats/leaveGroup`, 
         {chatId : chat._id} ,config
       );
       // console.log("Now the updated caht listd  will be :  ", UpdatedChat)

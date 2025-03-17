@@ -6,7 +6,7 @@ const cors = require('cors');
 // const { Socket } = require("dgram");
 const server = http.createServer(app);
 const io = new Server(server, { 
-  cors : {
+  cors : { 
       origin:'*',
       methods:['GET','POST']
   }

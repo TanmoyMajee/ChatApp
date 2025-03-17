@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const msgModel = mongoose.Schema({
   sender :{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'ChatUser'
   },
   content:{
     type: String,
@@ -21,7 +21,7 @@ const msgModel = mongoose.Schema({
   }
 },{timestamps: true});
 
-const MessageModel = mongoose.model('Message', msgModel);
+const MessageModel = mongoose.model('ChatMessage', msgModel);
 module.exports = MessageModel;
 
 // message model has the following schema:

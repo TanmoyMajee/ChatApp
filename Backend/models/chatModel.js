@@ -10,15 +10,15 @@ const chatModel = mongoose.Schema({
   },
   users:[{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'ChatUser'
   }],
   latestMessage:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Message'
+    ref: 'ChatMessage'
   },
   groupAdmins: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'ChatUser'
   }],
    GroupImage: {
     type: String,

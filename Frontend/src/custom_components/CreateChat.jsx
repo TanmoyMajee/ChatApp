@@ -63,13 +63,14 @@ const CreateChat = ({ onClose }) => {
     if (selectedUsers.length === 0) return;
     try {
     let response;
+     const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
     if (selectedUsers.length === 1) {
       // One-to-one chat: use the receiverID of the selected contact
       //  const ChatName= prompt("Enter Chat name With New User:");
       const receiverID = selectedUsers[0]._id;
       // NOTE: Replace the endpoint URL with your one-to-one chat route
       response = await axios.post(
-        "/api/chats/CreateOneToOneChat",
+        `${backendURL}/api/chats/CreateOneToOneChat`,
         { receiverID },
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -80,7 +81,7 @@ const CreateChat = ({ onClose }) => {
       const groupName = prompt("Enter group name:");
       // NOTE: Replace the endpoint URL with your group chat route
       response = await axios.post(
-        "/api/chats/CreateGroup",
+        `${backendURL}/api/chats/CreateGroup`,
         {
           chatName: groupName,
           // Send only the _id of each selected user

@@ -58,6 +58,7 @@ export default function ChatBox({ onBack }) {
 
   // Fetch messages from the backend when the selected chat changes.
   useEffect(() => {
+    const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
     const fetchMessages = async () => {
       if (!selectedChat) return;
       try {
@@ -67,7 +68,7 @@ export default function ChatBox({ onBack }) {
           },
         };
         const { data } = await axios.get(
-          `/api/message/${selectedChat._id}`,
+          `${backendURL}/api/message/${selectedChat._id}`,
           config
         );
         setMessages(data);
@@ -89,9 +90,9 @@ export default function ChatBox({ onBack }) {
           Authorization: `Bearer ${user.token}`,
         },
       };
-
+      const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
       const { data } = await axios.post(
-        "/api/message",
+        `${backendURL}/api/message`,
         { chatId: selectedChat._id, content: newMessage },
         config
       );
