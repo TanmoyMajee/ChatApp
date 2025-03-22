@@ -1,4 +1,4 @@
-import { useState,useContext , useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import UserContext from "@/contextApi/UserContext";
 
 export default function Login() {
-   const { login } = useContext(UserContext);
+  const { login } = useContext(UserContext);
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-        const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "";
       const response = await axios.post(`${backendURL}/api/users/login`, {
         email,
         password,
@@ -101,7 +101,7 @@ export default function Login() {
             {loading ? <Loader2 className="animate-spin mr-2" /> : "Log In"}
           </Button>
           <div className="text-center mt-2">
-           <Button variant="ghost" onClick={() => navigate("/")}>
+            <Button variant="ghost" onClick={() => navigate("/")}>
               Don't have an account? Sign up
             </Button>
           </div>

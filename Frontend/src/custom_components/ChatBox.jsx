@@ -6,7 +6,7 @@ import { useChat } from "../contextApi/ChatProvider";
 import { useUser } from "../contextApi/UserContext";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft , Menu } from "lucide-react";
+import { ArrowLeft, Menu } from "lucide-react";
 import ChatMenu from "./ChatMenu";
 
 // Custom hook to detect mobile screens (width < 768px)
@@ -29,7 +29,7 @@ export default function ChatBox({ onBack }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
-  const [showMenu,setShowMenu] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
   // console.log(messages.map(m => m._id));
 
   // Join the room when a chat is selected and socket is available.
@@ -58,7 +58,7 @@ export default function ChatBox({ onBack }) {
 
   // Fetch messages from the backend when the selected chat changes.
   useEffect(() => {
-    const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+    const backendURL = import.meta.env.VITE_BACKEND_URL || "";
     const fetchMessages = async () => {
       if (!selectedChat) return;
       try {
@@ -90,7 +90,7 @@ export default function ChatBox({ onBack }) {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "";
       const { data } = await axios.post(
         `${backendURL}/api/message`,
         { chatId: selectedChat._id, content: newMessage },
@@ -111,7 +111,7 @@ export default function ChatBox({ onBack }) {
     }
   };
 
-  const toggleMenu = ()=>{
+  const toggleMenu = () => {
     setShowMenu((prev) => !prev);
     console.log("Toggle")
   }
@@ -126,7 +126,7 @@ export default function ChatBox({ onBack }) {
   }
 
   return (
-    
+
     <div className="chat-container bg-gray-50 dark:bg-gray-800">
       {/* Fixed Header */}
       <div className="sticky top-0 bg-white dark:bg-gray-900 z-10 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
@@ -138,25 +138,24 @@ export default function ChatBox({ onBack }) {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
           {ChatName}
         </h2>
-         <Button variant="ghost" className="ml-auto" onClick={toggleMenu}>
-        <Menu size={24} className="text-gray-800 dark:text-gray-100" />
-      </Button>
+        <Button variant="ghost" className="ml-auto" onClick={toggleMenu}>
+          <Menu size={24} className="text-gray-800 dark:text-gray-100" />
+        </Button>
       </div>
 
       {
-        showMenu && <ChatMenu chat={selectedChat} closeMenu={()=> setShowMenu(false)} />
+        showMenu && <ChatMenu chat={selectedChat} closeMenu={() => setShowMenu(false)} />
       }
 
       {/* Scrollable Messages Container */}
       <div className="messages-container flex-1 overflow-y-auto p-4 min-h-0 space-y-2">
-        {messages.map ((message,indx) => (
+        {messages.map((message, indx) => (
           <div
             key={message._id || indx}
-            className={`p-2 border-b ${
-              message.sender && message.sender._id === user._id
+            className={`p-2 border-b ${message.sender && message.sender._id === user._id
                 ? "text-right"
                 : "text-left"
-            }`}
+              }`}
           >
             {message.sender && message.sender.name && (
               <div className="font-semibold text-gray-800 dark:text-gray-100">

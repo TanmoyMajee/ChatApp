@@ -8,9 +8,9 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 
 const CreateChat = ({ onClose }) => {
-    const { toast } = useToast();
+  const { toast } = useToast();
   const { user } = useUser();
-   const { setSelectedChat } = useChat();
+  const { setSelectedChat } = useChat();
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -37,7 +37,7 @@ const CreateChat = ({ onClose }) => {
             Authorization: `Bearer ${user.token}`,
           },
         };
-         const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+        const backendURL = import.meta.env.VITE_BACKEND_URL || "";
         const { data } = await axios.get(`${backendURL}/api/users`, config);
         const filteredData = data.filter(u => u._id !== user._id);
         setAllUsers(filteredData);
@@ -59,69 +59,69 @@ const CreateChat = ({ onClose }) => {
   };
 
   // Handle creating a new chat
-  const handleCreateChat =async () => {
+  const handleCreateChat = async () => {
     if (selectedUsers.length === 0) return;
     try {
-    let response;
-     const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
-    if (selectedUsers.length === 1) {
-      // One-to-one chat: use the receiverID of the selected contact
-      //  const ChatName= prompt("Enter Chat name With New User:");
-      const receiverID = selectedUsers[0]._id;
-      // NOTE: Replace the endpoint URL with your one-to-one chat route
-      response = await axios.post(
-        `${backendURL}/api/chats/CreateOneToOneChat`,
-        { receiverID },
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
-    } else {
-      // Group chat: prompt for a group name and send selected user IDs
-      const groupName = prompt("Enter group name:");
-      // NOTE: Replace the endpoint URL with your group chat route
-      response = await axios.post(
-        `${backendURL}/api/chats/CreateGroup`,
-        {
-          chatName: groupName,
-          // Send only the _id of each selected user
-          users: selectedUsers.map((u) => u._id), 
-        },
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
-    }
-    // Set the selected chat to the newly created (or retrieved) chat object
-    // here we need to append the newly created caht into chat list *********
-    console.log("ResPonse After creating New Chat : ",response)
-    console.log(response.data._id)
-    setSelectedChat(response.data)
-    if(response.data.latestMessage){
-          toast({
-        title: "Can't Crate a new Chat",
-        description: `As Chat with this user is exists , Redirect to that : ${response.data.chatName}`
-        // variant: "destructive",
-      });
-      //  By placing the global <Toaster /> in the Home page, toast messages remain visible even after the CreateChat modal closes. as this create chat will close instantly and we dont want to give toast here
-      // console.log("Toast")
-    }else{
-       toast({
-        title: "Chat Created",
-        description: `Redirect to caht ${response.data.chatName}`
-        // variant: "destructive"5665657465
-      });
-    }
-    // if respone lastmsg was not null then give a toast that alredy a chat exists and u will redirect to that
-    // setSelectedChat(response.data);
-    // Optionally update your chats list here if needed
+      let response;
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "";
+      if (selectedUsers.length === 1) {
+        // One-to-one chat: use the receiverID of the selected contact
+        //  const ChatName= prompt("Enter Chat name With New User:");
+        const receiverID = selectedUsers[0]._id;
+        // NOTE: Replace the endpoint URL with your one-to-one chat route
+        response = await axios.post(
+          `${backendURL}/api/chats/CreateOneToOneChat`,
+          { receiverID },
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        );
+      } else {
+        // Group chat: prompt for a group name and send selected user IDs
+        const groupName = prompt("Enter group name:");
+        // NOTE: Replace the endpoint URL with your group chat route
+        response = await axios.post(
+          `${backendURL}/api/chats/CreateGroup`,
+          {
+            chatName: groupName,
+            // Send only the _id of each selected user
+            users: selectedUsers.map((u) => u._id),
+          },
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        );
+      }
+      // Set the selected chat to the newly created (or retrieved) chat object
+      // here we need to append the newly created caht into chat list *********
+      console.log("ResPonse After creating New Chat : ", response)
+      console.log(response.data._id)
+      setSelectedChat(response.data)
+      if (response.data.latestMessage) {
+        toast({
+          title: "Can't Crate a new Chat",
+          description: `As Chat with this user is exists , Redirect to that : ${response.data.chatName}`
+          // variant: "destructive",
+        });
+        //  By placing the global <Toaster /> in the Home page, toast messages remain visible even after the CreateChat modal closes. as this create chat will close instantly and we dont want to give toast here
+        // console.log("Toast")
+      } else {
+        toast({
+          title: "Chat Created",
+          description: `Redirect to caht ${response.data.chatName}`
+          // variant: "destructive"5665657465
+        });
+      }
+      // if respone lastmsg was not null then give a toast that alredy a chat exists and u will redirect to that
+      // setSelectedChat(response.data);
+      // Optionally update your chats list here if needed
 
-    // Close the CreateChat modal
-    onClose();
-  } catch (error) {
-    console.error("Error creating chat:", error);
-    // Optionally, handle errors (e.g., display a message to the user)
-  }
+      // Close the CreateChat modal
+      onClose();
+    } catch (error) {
+      console.error("Error creating chat:", error);
+      // Optionally, handle errors (e.g., display a message to the user)
+    }
   };
 
   return (
@@ -170,11 +170,10 @@ const CreateChat = ({ onClose }) => {
           {filteredUsers.map((user) => (
             <div
               key={user._id}
-              className={`p-3 border-b flex items-center cursor-pointer ${
-                selectedUsers.find((u) => u._id === user._id)
+              className={`p-3 border-b flex items-center cursor-pointer ${selectedUsers.find((u) => u._id === user._id)
                   ? "bg-gray-100 dark:bg-gray-700"
                   : ""
-              }`}
+                }`}
               onClick={() => handleUserSelect(user)}
             >
               <div className="font-semibold text-gray-900 dark:text-gray-100">{user.name}</div>
@@ -200,12 +199,12 @@ const CreateChat = ({ onClose }) => {
 export default CreateChat;
 
 
- // if (selectedUsers.length === 0) return;
-    // if (selectedUsers.length === 1) {
-    //   const OneToOneName = prompt("Enter Chat name:");
-    //    console.log("Creating one-to-one chat with:", selectedUsers, "Chat Name:", oneToOneName);
-    // } else {
-    //   const groupName = prompt("Enter group name:");
-    //  console.log("Creating group chat with:", selectedUsers, "Group Name:", groupName);
-    // }
-    // onClose();
+// if (selectedUsers.length === 0) return;
+// if (selectedUsers.length === 1) {
+//   const OneToOneName = prompt("Enter Chat name:");
+//    console.log("Creating one-to-one chat with:", selectedUsers, "Chat Name:", oneToOneName);
+// } else {
+//   const groupName = prompt("Enter group name:");
+//  console.log("Creating group chat with:", selectedUsers, "Group Name:", groupName);
+// }
+// onClose();

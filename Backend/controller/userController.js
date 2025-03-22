@@ -64,7 +64,7 @@ let allusersFun = asyncHandler(async (req, res) => {
   // This code searches for users by name or email based on the "search" query parameter from the frontend.
 // If a search value is provided, we assign the search value to the name and email fields using the $regex operator so that we can search for users by name or email. in database
 // if the search value is not provided, then keyword will be an empty object
-// The $or operator allows matching either the name or the email field.
+// The $or operator allows matching either the name or the email field. 
   const keyword = req.query.search ? 
 {
   $or:[

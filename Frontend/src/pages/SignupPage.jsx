@@ -114,7 +114,7 @@ export default function SignupPage() {
       // };
       // console.log(signupData)
       // const pic : profilePic;
-      const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "";
       const response = await axios.post(`${backendURL}/api/users`,
          {name,email,password,pic:imageUrl}, {
         headers: {

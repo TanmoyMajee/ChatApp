@@ -9,15 +9,15 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
 
   // Function to fetch chats for the user
-  
-      const fetchChats = async (userToken) => {
+
+  const fetchChats = async (userToken) => {
     try {
       const config = {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
       };
-       const backendURL =  import.meta.env.REACT_APP_BACKEND_URL || "";
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "";
       const { data } = await axios.get(`${backendURL}/api/chats`, config);
       setChats(data);
     } catch (error) {
