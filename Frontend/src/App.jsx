@@ -23,9 +23,9 @@ function App() {
     <>
       
        <Routes>
-        <Route path='/' Component={SignupPage}/>
+        <Route path='/signup' Component={SignupPage}/>
         <Route path='/login' Component={Login}/>
-         <Route path='/home' Component={Home}/>
+         <Route path='/' Component={Home}/>
   
           </Routes>
           <Toaster/>

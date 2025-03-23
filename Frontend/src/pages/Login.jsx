@@ -46,7 +46,7 @@ export default function Login() {
           variant: "default",
         });
         // Redirect to home page
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -101,7 +101,7 @@ export default function Login() {
             {loading ? <Loader2 className="animate-spin mr-2" /> : "Log In"}
           </Button>
           <div className="text-center mt-2">
-            <Button variant="ghost" onClick={() => navigate("/")}>
+            <Button variant="ghost" onClick={() => navigate("/signup")}>
               Don't have an account? Sign up
             </Button>
           </div>

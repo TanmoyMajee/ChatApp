@@ -15,14 +15,14 @@ export const UserProvider = ({ children }) => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
-      navigate("/");
+      navigate("/signup");
     }
   }, []);
 
   const login = (userData) => {
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    navigate("/home");
+    navigate("/");
   };
 
   const logout = () => {

@@ -30,7 +30,7 @@ export default function SignupPage() {
 
   useEffect(()=>{
       if(user)
-        navigate('/home')
+        navigate('/')
   },[user])
 
   // This function is called when the user selects a file.
@@ -131,8 +131,8 @@ export default function SignupPage() {
           description: "Redirect to Home Page.",
           variant: "default",
         });
-        // Redirect to chat page
-        navigate("/home");
+        // Redirect to home page
+        navigate("/");
       }
     } catch (error) {
       console.error("Signup error:", error);

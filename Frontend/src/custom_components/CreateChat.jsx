@@ -6,11 +6,12 @@ import { useUser } from "../contextApi/UserContext";
 import { useChat } from "../contextApi/ChatProvider";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import ChatList from "./ChatList";
 
 const CreateChat = ({ onClose }) => {
   const { toast } = useToast();
   const { user } = useUser();
-  const { setSelectedChat } = useChat();
+  const { setSelectedChat , setChats , chats } = useChat();
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -106,6 +107,7 @@ const CreateChat = ({ onClose }) => {
         //  By placing the global <Toaster /> in the Home page, toast messages remain visible even after the CreateChat modal closes. as this create chat will close instantly and we dont want to give toast here
         // console.log("Toast")
       } else {
+        setChats([...chats,response.data])
         toast({
           title: "Chat Created",
           description: `Redirect to caht ${response.data.chatName}`
