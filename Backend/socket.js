@@ -35,6 +35,13 @@ io.on('connection',(socket)=>{
       console.log("user join room :",room)
   })
 
+  // Add this new handler
+  socket.on("leave_room", (room) => {
+    socket.leave(room);
+    console.log("user left room :", room)
+  })
+
+
   socket.on("new_message",(data)=>{
       // let chat = message.chat;
       //  console.log("Received message:", data);

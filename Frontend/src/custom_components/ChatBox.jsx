@@ -33,23 +33,53 @@ export default function ChatBox({ onBack }) {
   // console.log(messages.map(m => m._id));
 
   // Join the room when a chat is selected and socket is available.
-  useEffect(() => {
-    if (selectedChat && socket) {
-      socket.emit("join_room", selectedChat._id);
-    }
-  }, [selectedChat, socket]);
+  // useEffect(() => {
+  //   if (selectedChat && socket) {
+  //     socket.emit("join_room", selectedChat._id);
+  //   }
+  // }, [selectedChat, socket]);
 
-  // Listen for incoming messages.
+  // // Listen for incoming messages.
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("message_received", (data) => {
+  //       setMessages((prev) => [...prev, data]);
+  //     });
+  //     return () => {
+  //       socket.off("message_received");
+  //     };
+  //   }
+  // }, [socket]);
+  // Problem: This listener is only added / removed when the socket changes, not when the selected chat changes.This means you might be listening to events from previous chats.
+
   useEffect(() => {
-    if (socket) {
-      socket.on("message_received", (data) => {
-        setMessages((prev) => [...prev, data]);
-      });
+    if (socket && selectedChat) {
+      // Clean join/leave room logic
+      socket.emit("join_room", selectedChat._id);
+
+      // Message handler specific to this chat
+      const handleMessage = (data) => {
+        // Only add messages for the current chat
+        if (data.room === selectedChat._id) {
+          // Use a function to check if message already exists to avoid duplicates
+          setMessages((prev) => {
+            // Check if message with this ID already exists
+            const exists = prev.some(msg => msg._id === data._id);
+            if (exists) return prev;
+            return [...prev, data];
+          });
+        }
+      };
+
+      socket.on("message_received", handleMessage);
+
       return () => {
-        socket.off("message_received");
+        // Leave the room when component unmounts or chat changes
+        socket.emit("leave_room", selectedChat._id);
+        socket.off("message_received", handleMessage);
       };
     }
-  }, [socket]);
+  }, [socket, selectedChat]);
 
   // Auto-scroll to bottom whenever messages update.
   useEffect(() => {
@@ -98,6 +128,7 @@ export default function ChatBox({ onBack }) {
       );
       // Emit the message to the room via socket.
       socket.emit("new_message", {
+        _id: data._id, // Include the database ID
         room: selectedChat._id,
         content: newMessage,
         sender: user,
@@ -167,7 +198,8 @@ export default function ChatBox({ onBack }) {
             </div>
           </div>
         ))}
-        <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} 
+        className={`${isMobile ? 'pb-6 mb-4' : 'pb-2'}`} />
       </div>
 
       {/* Fixed Message Input Field */}
