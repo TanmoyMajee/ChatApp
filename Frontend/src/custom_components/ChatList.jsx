@@ -23,12 +23,26 @@ export default function ChatList() {
     if (searchTerm === "") {
       setFilteredChats(chats);
     } else {
-      const filtered = chats.filter((chat) =>
-        chat.chatName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const filtered = chats.filter((chat) => {
+        // Check if the chat's name includes the search term
+        const chatNameMatch = chat.chatName.toLowerCase().includes(searchTerm.toLowerCase());
+        if (chatNameMatch) return true;
+
+        // For one-on-one chats, also check the other user's name
+        if (!chat.groupChat && chat.users) {
+          // Find the other user (not the current user)
+          const otherUsers = chat.users.filter(u => u._id !== user._id);
+          return otherUsers.some(otherUser =>
+            otherUser.name && otherUser.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }
+
+        return false;
+      });
       setFilteredChats(filtered);
     }
-  }, [searchTerm, chats]);
+  }, [searchTerm, chats, user]);
+
 
   return (
     <div className="p-4 h-[calc(100vh-100px)] flex flex-col">
