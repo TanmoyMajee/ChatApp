@@ -29,7 +29,7 @@ const registerFun = asyncHandler(async (req, res) => {
       _id: newUser._id,
       name: newUser.name,
       email: newUser.email,
-      pic: newUser.pic,
+      pic: newUser.image,
       token:getToken(newUser._id)
     });}else{
       res.status(400);
@@ -49,7 +49,7 @@ const authuserFun=asyncHandler(async (req,res)=>{
         _id: userExist._id,
         name: userExist.name,
         email: userExist.email,
-        pic: userExist.pic,
+        pic: userExist.image,
         token:getToken(userExist._id)
       })
     }else{
