@@ -5,9 +5,11 @@ import {React,useState} from "react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./ThemeToggle";
 import Profile from "./Profile";
+import { useContext } from "react";
+import UserContext from "@/contextApi/UserContext";
 
 export default function Header() {
-
+  const { user } = useContext(UserContext);
   const [isShowingProfile, setIsShowingProfile] = useState(false);
 
   const showProfile = () => {
@@ -23,7 +25,7 @@ export default function Header() {
         {/* Profile Button */}
         <Button variant="ghost">
           <img
-            src="/path/to/profile.jpg" // Replace with actual profile image URL
+            src={user?.pic || "/path/to/profile.jpg"} // Replace with actual profile image URL
             alt="Profile"
             className="w-8 h-8 rounded-full"
             onClick={showProfile}
