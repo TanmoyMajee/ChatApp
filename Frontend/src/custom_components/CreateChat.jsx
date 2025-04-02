@@ -178,7 +178,9 @@ const CreateChat = ({ onClose }) => {
                 }`}
               onClick={() => handleUserSelect(user)}
             >
-              <div className="font-semibold text-gray-900 dark:text-gray-100">{user.name}</div>
+              {/* // here we need to add a image of the user */}
+              <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full" />
+              <div className="font-semibold text-gray-900 dark:text-gray-100 ml-2">{user.name}</div>
             </div>
           ))}
         </div>

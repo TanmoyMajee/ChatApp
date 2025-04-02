@@ -42,7 +42,9 @@ export default function ChatList() {
       setFilteredChats(filtered);
     }
   }, [searchTerm, chats, user]);
-
+  // Improve search filter for one-on-one chats by checking other user's name.
+  //  we pass the dependency user  to the useEffect hook to ensure that the search filter is updated when the user changes.
+  // ans we also pass the dependency chats to the useEffect hook to ensure that the search filter is updated when the chats change.
 
   return (
     <div className="p-4 h-[calc(100vh-100px)] flex flex-col">
