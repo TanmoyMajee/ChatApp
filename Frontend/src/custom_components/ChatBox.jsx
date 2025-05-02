@@ -196,6 +196,17 @@ export default function ChatBox({ onBack }) {
             <div className="text-gray-700 dark:text-gray-200">
               {message.content || message.text}
             </div>
+            <div>
+                {new Date(message.updatedAt).toLocaleString('en-IN', {
+                   day: '2-digit',
+                   month: 'short',
+                  //  year: 'numeric',
+                   hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                     timeZone: 'Asia/Kolkata',
+               })}
+</div>
           </div>
         ))}
         <div ref={messagesEndRef} 
