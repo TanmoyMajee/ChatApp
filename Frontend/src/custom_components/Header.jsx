@@ -1,11 +1,12 @@
 
-// // Now, you can use the SideDrawer component in the HomePage component by uncommenting the import statement and the <SideDrawer /> component in the HomePage component.
+
 
 import {React,useState} from "react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./ThemeToggle";
 import Profile from "./Profile";
 import { useContext } from "react";
+import { Bell } from "lucide-react"
 import UserContext from "@/contextApi/UserContext";
 
 export default function Header() {
@@ -21,6 +22,10 @@ export default function Header() {
       <div className="text-xl font-bold">Chat App</div>
       <div className="flex items-center space-x-4">
         {/* Dark/Light Mode Toggle */}
+        <Button>
+            <Bell  size={24} />
+        </Button>
+        {/* Notification Button */}
         <ThemeToggle />
         {/* Profile Button */}
         <Button variant="ghost">

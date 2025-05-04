@@ -7,11 +7,12 @@ const ChatContext = createContext();
 export const ChatProvider = ({ children }) => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
-
+  const [loading, setLoading] = useState(true);	
   // Function to fetch chats for the user
 
   const fetchChats = async (userToken) => {
     try {
+      setLoading(true); // Set loading to true before fetching
       const config = {
         headers: {
           Authorization: `Bearer ${userToken}`,
@@ -23,13 +24,16 @@ export const ChatProvider = ({ children }) => {
     } catch (error) {
       console.error("Failed to fetch chats", error);
     }
+    finally {
+      setLoading(false); // Set loading to false after fetching
+    }
   };
 
 
 
   return (
     <ChatContext.Provider
-      value={{ selectedChat, setSelectedChat, chats, setChats, fetchChats }}
+      value={{ selectedChat, setSelectedChat, chats, setChats, fetchChats , loading, setLoading}}
     >
       {children}
     </ChatContext.Provider>

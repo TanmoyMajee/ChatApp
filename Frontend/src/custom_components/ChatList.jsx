@@ -3,16 +3,20 @@ import React, { useState, useEffect } from "react";
 import { useChat } from "../contextApi/ChatProvider";
 import { Input } from "@/components/ui/input";
 import { useUser } from "../contextApi/UserContext";
+import { useTheme } from "next-themes";
 import ChatListItem from "./ChatListItem";
 import CreateChat from "./CreateChat";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import "../App.css";
 
 export default function ChatList() {
-  const { chats, setSelectedChat ,selectedChat } = useChat();
+  const { chats, setSelectedChat ,selectedChat , loading } = useChat();
   const { user, onlineUsers } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredChats, setFilteredChats] = useState(chats);
     const [showNewChatModal, setShowNewChatModal] = useState(false);
+     const { theme } = useTheme(); 
 // const [selectedChatToggler,setselectedChatToggler] = useState(false);
 
 // useEffect(()=>{
@@ -68,18 +72,26 @@ export default function ChatList() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-      {filteredChats.map((chat) => (
-
-              <ChatListItem
-          key={chat._id}
-          chat={chat}
-          user={user}
-          onlineUsers={onlineUsers}
-          setSelectedChat={setSelectedChat}
-        />
-      ))}
-      </div>
+   
+<div className="flex-1 overflow-y-auto">
+  {loading ? (
+   
+        <Skeleton
+        baseColor={theme === "dark" ? "#1f2937" : "#f3f4f6"}
+        highlightColor={theme === "dark" ? "#4a5568" : "#f7fafc"} // Dark mode highlight color
+        height={60} borderRadius={4} count={7}/>
+  ) : (
+    filteredChats.map((chat) => (
+      <ChatListItem
+        key={chat._id}
+        chat={chat}
+        user={user}
+        onlineUsers={onlineUsers}
+        setSelectedChat={setSelectedChat}
+      />
+    ))
+  )}
+</div>
 
 
 
@@ -92,3 +104,9 @@ export default function ChatList() {
     </div>
   );
 }
+
+
+
+
+
+
