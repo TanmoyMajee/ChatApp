@@ -8,7 +8,7 @@ import { useUser } from "../contextApi/UserContext";
 import { io } from "socket.io-client";
 
 export default function HomePage() {
-  const { selectedChat, fetchChats, setSelectedChat } = useChat();
+  const { selectedChat, fetchChats, setSelectedChat  } = useChat();
   const { user, setSocketID, socketId, setOnlineUsers } = useUser();
 
   // Fetch chats when the user is available

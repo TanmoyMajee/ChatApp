@@ -8,6 +8,9 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Menu } from "lucide-react";
 import ChatMenu from "./ChatMenu";
+import Skeleton from 'react-loading-skeleton'
+import { useTheme } from "next-themes";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 // Custom hook to detect mobile screens (width < 768px)
 function useIsMobile(breakpoint = 768) {
@@ -24,12 +27,14 @@ function useIsMobile(breakpoint = 768) {
 
 export default function ChatBox({ onBack }) {
   const isMobile = useIsMobile();
-  const { selectedChat } = useChat();
+  const {theme } = useTheme() // Get the current theme from the context
+  const { selectedChat  } = useChat();
   const { user, socket } = useUser(); // Ensure that your context stores the full socket instance in "socket"
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
   const [showMenu, setShowMenu] = useState(false)
+  const [msgLoading, setMsgLoading] = useState(false)
   // console.log(messages.map(m => m._id));
 
   // Join the room when a chat is selected and socket is available.
@@ -92,6 +97,7 @@ export default function ChatBox({ onBack }) {
     const fetchMessages = async () => {
       if (!selectedChat) return;
       try {
+        setMsgLoading(true); // Set loading state to true before fetching
         const config = {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -104,6 +110,8 @@ export default function ChatBox({ onBack }) {
         setMessages(data);
       } catch (error) {
         console.error("Failed to fetch messages", error);
+      }finally {
+        setMsgLoading(false); // Set loading state to false after fetching
       }
     };
     fetchMessages();
@@ -178,8 +186,19 @@ export default function ChatBox({ onBack }) {
         showMenu && <ChatMenu chat={selectedChat} closeMenu={() => setShowMenu(false)} />
       }
 
-      {/* Scrollable Messages Container */}
-      <div className="messages-container flex-1 overflow-y-auto p-4 min-h-0 space-y-2">
+
+      {/* Loading Indicator */}
+      {msgLoading ?  (
+        // <div className="flex items-center justify-center p-4">
+          <Skeleton
+                  baseColor={theme === "dark" ? "#1f2937" : "#f3f4f6"}
+                  highlightColor={theme === "dark" ? "#4a5568" : "#f7fafc"} // Dark mode highlight color
+                  height={60} borderRadius={4} count={8}/>
+        // </div>
+      ) : (
+  
+      <div className="messages-container flex-1 overflow-y-auto p-4 min-h-0   space-y-2">
+         {/* Scrollable Messages Container */}
         {messages.map((message, indx) => (
           <div
             key={message._id || indx}
@@ -212,6 +231,9 @@ export default function ChatBox({ onBack }) {
         <div ref={messagesEndRef} 
         className={`${isMobile ? 'pb-6 mb-4' : 'pb-2'}`} />
       </div>
+
+      )}
+
 
       {/* Fixed Message Input Field */}
       <form
