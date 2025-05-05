@@ -7,6 +7,10 @@ import { useChat } from "../contextApi/ChatProvider";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import ChatList from "./ChatList";
+import { useTheme } from "next-themes";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 
 const CreateChat = ({ onClose }) => {
   const { toast } = useToast();
@@ -16,7 +20,8 @@ const CreateChat = ({ onClose }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [selectedUsers, setSelectedUser] = useState([]);
-
+  const [loading , setLoading] = useState([]);
+ const { theme } = useTheme(); 
   // Filter users based on the search term
   useEffect(() => {
     if (searchTerm === "") {
@@ -32,6 +37,7 @@ const CreateChat = ({ onClose }) => {
   // Fetch all users from the backend and filter out the current user
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true)
       try {
         const config = {
           headers: {
@@ -44,6 +50,8 @@ const CreateChat = ({ onClose }) => {
         setAllUsers(filteredData);
       } catch (error) {
         console.error("Failed to fetch users:", error);
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -168,8 +176,23 @@ const CreateChat = ({ onClose }) => {
         )}
 
         {/* Contacts List */}
+        {/* {
+          loading ? ():(
+            
+          )
+        } */}
         <div className="flex-1 p-4 overflow-y-auto">
-          {filteredUsers.map((user) => (
+          {
+            loading ? (
+                 <Skeleton
+      baseColor={theme === "dark" ? "#1f2937" : "#f3f4f6"} // Base color for dark/light mode
+      highlightColor={theme === "dark" ? "#4a5568" : "#f7fafc"} // Highlight color for dark/light mode
+      height={60}
+      borderRadius={4}
+      count={7} // Number of skeleton rows
+    />
+            ):(
+              filteredUsers.map((user) => (
             <div
               key={user._id}
               className={`p-3 border-b flex items-center cursor-pointer ${selectedUsers.find((u) => u._id === user._id)
@@ -182,7 +205,9 @@ const CreateChat = ({ onClose }) => {
               <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full" />
               <div className="font-semibold text-gray-900 dark:text-gray-100 ml-2">{user.name}</div>
             </div>
-          ))}
+          ))
+            )
+          }
         </div>
 
         {/* Footer Button */}
