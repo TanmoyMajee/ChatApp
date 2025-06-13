@@ -1,8 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const userModel = require('../models/userModel');
 const getToken = require('../config/generateToken');
+const admin =  require('../config/firebase-admin')
 // import { compare } from 'bcryptjs';
 const becrypt = require('bcrypt');
+const UserModel = require('../models/userModel');
 
 const registerFun = asyncHandler(async (req, res) => {
   const { name, email, password,pic } = req.body;
@@ -38,6 +40,77 @@ const registerFun = asyncHandler(async (req, res) => {
 
 });
 
+const googleRegister = asyncHandler(async (req,res)=>{
+  try {
+    const { idToken } = req.body;
+
+    // Verify the ID token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { email, name, picture, uid: googleId, email_verified } = decodedToken;
+
+    // Check if user already exists
+    const existingUser = await UserModel.findOne({
+      $or: [
+        { email },
+        { googleId }
+      ]
+    });
+
+
+    // In your Google registration controller
+    if (existingUser) {
+      // Instead of returning an error, log the user in
+      // const token = jwt.sign(
+      //   { id: existingUser._id, isGoogleUser: true },
+      //   process.env.JWT_SECRET,
+      //   { expiresIn: '30d' }
+      // );
+      const token = getToken(existingUser._id)
+
+      return res.json({
+        _id: existingUser._id,
+        name: existingUser.name,
+        email: existingUser.email,
+        pic: existingUser.image,
+        token,
+        isGoogleUser: true,
+        emailVerified: existingUser.emailVerified
+      });
+    }
+
+    // Create new user
+    const user = await UserModel.create({
+      email,
+      name,
+      image: picture,
+      googleId,
+      emailVerified: email_verified,
+      isGoogleUser: true,
+      password: Math.random().toString(36).slice(-8)
+    });
+    // Generate JWT token
+    // const token = jwt.sign(
+    //   { id: user._id, isGoogleUser: true },
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: '30d' }
+    // );
+    const token = getToken(user._id)
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      pic: user.image,
+      token,
+      isGoogleUser: true,
+      emailVerified: user.emailVerified
+    });
+
+  } catch (error) {
+    console.error('Google registration error:', error);
+    res.status(500).json({ message: 'Registration failed' });
+  }
+})
+
 const authuserFun=asyncHandler(async (req,res)=>{
     const {email,password}=req.body;
     const userExist=await userModel.findOne({email});
@@ -57,6 +130,59 @@ const authuserFun=asyncHandler(async (req,res)=>{
       throw new Error('Invalid email or password');
     }
     
+})
+
+const googleLogin = asyncHandler(async (req,res)=>{
+  try {
+    const { idToken } = req.body;
+
+    // Verify the ID token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { email, uid: googleId } = decodedToken;
+
+    // Find user
+    const user = await UserModel.findOne({
+      $or: [
+        { email },
+        { googleId }
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found. Please register first.'
+      });
+    }
+    // 5. Verify with data base Google id 
+    if (user.googleId && user.googleId !== decodedToken.uid) {
+      return res.status(401).json({ message: 'Invalid Google account' });
+    }
+    // Update last login and Google info
+    user.lastGoogleLogin = new Date();
+    user.googleId = googleId;
+    await user.save();
+
+    // Generate JWT token
+    // const token = jwt.sign(
+    //   { id: user._id, isGoogleUser: true },
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: '30d' }
+    // );
+    const token = getToken(user._id)
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      pic: user.image,
+      token,
+      isGoogleUser: true,
+      emailVerified: user.emailVerified
+    });
+
+  } catch (error) {
+    console.error('Google login error:', error);
+    res.status(500).json({ message: 'Login failed' });
+  }
 })
 
 // api/users?name=ram&
@@ -84,7 +210,7 @@ let allusersFun = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { registerFun , authuserFun, allusersFun};
+module.exports = { registerFun , authuserFun, allusersFun , googleLogin , googleRegister};
 
 
 // asyncHandler is a middleware function that helps handle errors in asynchronous route handlers in Express.js. It automatically catches errors and passes them to the error-handling middleware, preventing the need for repetitive try-catch blocks.
