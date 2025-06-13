@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import UserContext from "@/contextApi/UserContext";
 
 export default function Login() {
-  const { login } = useContext(UserContext);
+  const { login, googleLogin } = useContext(UserContext);
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -101,6 +101,17 @@ export default function Login() {
             className="w-full mt-4"
           >
             {loading ? <Loader2 className="animate-spin mr-2" /> : "Log In"}
+          </Button>
+          <Button
+          onClick={googleLogin}
+            className="w-full bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+          >
+            <img
+              src="https://www.google.com/favicon.ico"
+              alt="Google"
+              className="w-5 h-5 mr-2"
+            />
+            Continue with Google
           </Button>
           <div className="text-center mt-2">
             <Button variant="ghost" onClick={() => navigate("/signup")}>

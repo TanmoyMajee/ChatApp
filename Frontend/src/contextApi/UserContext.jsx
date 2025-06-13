@@ -1,6 +1,10 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import {auth,googleProvider} from '../Firebase/firebase'
+import { signInWithPopup } from 'firebase/auth';
 import { useNavigate} from "react-router-dom";
+
+
 
 const UserContext = createContext();
 // const location = useLocation();
@@ -31,8 +35,27 @@ export const UserProvider = ({ children }) => {
     navigate("/login");
   };
 
+  const googleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      // Send ID token to backend
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "";
+      const response = await axios.post(`${backendURL}/api/users/google-login`, {
+        idToken
+      });
+
+      if (response.data) {
+        login(response.data);
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, login, logout , socket,setSocketID,onlineUsers,setOnlineUsers}}>
+    <UserContext.Provider value={{ user, login, logout , socket,setSocketID,onlineUsers,setOnlineUsers , googleLogin}}>
       {children}
     </UserContext.Provider>
   );
