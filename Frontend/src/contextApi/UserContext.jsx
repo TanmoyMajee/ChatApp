@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import {auth,googleProvider} from '../Firebase/firebase'
 import { signInWithPopup } from 'firebase/auth';
 import { useNavigate} from "react-router-dom";
-
+import axios from "axios";
 
 
 const UserContext = createContext();
@@ -54,8 +54,26 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const googleRegister = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+      
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "";
+      const response = await axios.post(`${backendURL}/api/users/google-register`, {
+        idToken
+      });
+
+      if (response.data) {
+        login(response.data);
+      }
+    } catch (error) {
+      console.error("Google registration error:", error);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, login, logout , socket,setSocketID,onlineUsers,setOnlineUsers , googleLogin}}>
+    <UserContext.Provider value={{ user, login, logout , socket,setSocketID,onlineUsers,setOnlineUsers , googleLogin , googleRegister}}>
       {children}
     </UserContext.Provider>
   );
