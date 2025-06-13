@@ -21,6 +21,18 @@ const userSchema = mongoose.Schema({
     type: String,
      default: 'https://up.yimg.com/ib/th?id=OIP.PoS7waY4-VeqgNuBSxVUogAAAA&pid=Api&rs=1&c=1&qlt=95&w=114&h=114'
   },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false
+  },
+  lastGoogleLogin: { 
+    type: Date
+  }
 }, { timestamps: true });
 
 userSchema.methods.matchPassword = async function (enteredPass){
