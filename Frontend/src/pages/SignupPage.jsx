@@ -1,70 +1,53 @@
-import { useState ,useContext,useEffect } from "react";
-
+import { useState, useContext, useEffect } from "react";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
 import UserContext from "@/contextApi/UserContext";
 
 export default function SignupPage() {
-   const navigate = useNavigate();
-   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const { user, login, googleRegister } = useContext(UserContext);
+
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
-  // Form states
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  // const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [profilePic, setProfilePic] = useState(null); // this holds the file object
+  const [profilePic, setProfilePic] = useState(null);
 
-  useEffect(()=>{
-      if(user)
-        navigate('/')
-  },[user])
+  useEffect(() => {
+    if (user) navigate("/");
+  }, [user]);
 
-  // This function is called when the user selects a file.
-  // We simply store the file in state; we delay uploading until signup.
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // Optionally check if the file type is an image:
-      if (!file.type.startsWith("image/")) {
-          toast({
-          title: "Invalid file type",
-          description: "Please select a valid image file.",
-          variant: "destructive",
-        });
-          setProfilePic(null);
-        return;
-      }
-      setProfilePic(file);
+    if (file && !file.type.startsWith("image/")) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select a valid image file.",
+        variant: "destructive",
+      });
+      setProfilePic(null);
+      return;
     }
+    setProfilePic(file);
   };
 
-  // When the user clicks Sign Up, we do the following:
-  // 1. Validate that passwords match.
-  // 2. If a file is selected, upload it to Cloudinary and get the secure_url.
-  // 3. Combine all the state data into an object and send it to your backend via axios.
-   // Cloudinary configuration (replace with your actual credentials)
   const CLOUD_NAME = "dzztoym0v";
   const UPLOAD_PRESET = "Chat_App_Profile_pic";
 
   const handleSignup = async () => {
-
-    console.log(name,email,password , confirmPassword ,profilePic)
-
-     if (!name || !email || !password || !confirmPassword || !profilePic) {
+    if (!name || !email || !password || !confirmPassword || !profilePic) {
       toast({
         title: "Missing fields",
         description: "Please fill all the fields Frontend.",
@@ -72,7 +55,6 @@ export default function SignupPage() {
       });
       return;
     }
-
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match.");
       return;
@@ -81,9 +63,8 @@ export default function SignupPage() {
     setLoading(true);
 
     let imageUrl = "";
-    
+
     try {
-      // Upload to Cloudinary if image is selected
       if (profilePic) {
         setUploading(true);
         const formData = new FormData();
@@ -94,51 +75,35 @@ export default function SignupPage() {
         const cloudinaryResponse = await axios.post(
           `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
           formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
-        
         imageUrl = cloudinaryResponse.data.secure_url;
         setUploading(false);
       }
 
-      // Send data to backend
-      // const signupData = {
-      //   name,
-      //   email,
-      //   password,
-      //   pic: imageUrl,  // Using 'pic' to match your backend model
-      // };
-      // console.log(signupData)
-      // const pic : profilePic;
       const backendURL = import.meta.env.VITE_BACKEND_URL || "";
-      const response = await axios.post(`${backendURL}/api/users`,
-         {name,email,password,pic:imageUrl}, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        `${backendURL}/api/users`,
+        { name, email, password, pic: imageUrl },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      // console.log("Signup response:", response);
       if (response.data) {
-        // localStorage.setItem("user", JSON.stringify(response.data));
-          login(response.data);
-         toast({
+        login(response.data);
+        toast({
           title: "Signup successful",
           description: "Redirect to Home Page.",
           variant: "default",
         });
-        // Redirect to home page
         navigate("/");
       }
     } catch (error) {
       console.error("Signup error:", error);
       toast({
         title: "Signup failed",
-        description: error.response?.data?.message || "Signup failed. Please check your details and try again.",
+        description:
+          error.response?.data?.message ||
+          "Signup failed. Please check your details and try again.",
         variant: "destructive",
       });
     } finally {
@@ -147,77 +112,86 @@ export default function SignupPage() {
     }
   };
 
-  // ... (rest of the JSX remains the same)
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-l from-purple-50 to-indigo-500 px-4">
+      {/* Top Branding & Info */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-indigo-800">ChatApp</h1>
+        <p className="text-lg text-gray-700 mt-1">
+          Real-Time Connect & Chat
+        </p>
+        <p className="text-sm text-gray-800 mt-2 max-w-md mx-auto px-2">
+          Connect instantly with friends, family & colleagues —
+          one-on-one or in groups.
+        </p>
+      </div>
+
+      <Card className="w-full max-w-lg shadow-2xl rounded-3xl">
         <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
+          <CardTitle className="text-center text-2xl font-semibold text-gray-500">
+            Create Your Account
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 px-6 py-4">
           <Input
             type="text"
-            placeholder="Name"
-            className="w-full"
+            placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="py-3"
           />
           <Input
             type="email"
-            placeholder="Email"
-            className="w-full"
+            placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="py-3"
           />
-          {/* <Input
-            type="tel"
-            placeholder="Phone Number"
-            className="w-full"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          /> */}
+
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full pr-10"
+              className="py-3 pr-10"
             />
             <Button
               type="button"
               variant="ghost"
-              className="absolute right-2 top-0.5 p-1"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </Button>
           </div>
+
           <div className="relative">
             <Input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full pr-10"
+              className="py-3 pr-10"
             />
             <Button
               type="button"
               variant="ghost"
-              className="absolute right-2 top-0.5 p-1"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </Button>
           </div>
+
           {passwordError && (
-            <p className="text-red-500 text-sm">{passwordError}</p>
+            <p className="text-red-500 text-sm mt-1">{passwordError}</p>
           )}
-          <div className="relative">
-            <label className="block text-gray-700 mb-2">Profile Picture</label>
-            <div className="flex items-center justify-between">
-              <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+
+          <div className="mt-3">
+            <label className="block text-gray-700 mb-1">Profile Picture</label>
+            <div className="flex items-center space-x-3">
+              <label className="cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
                 Choose File
                 <input
                   type="file"
@@ -226,44 +200,44 @@ export default function SignupPage() {
                   onChange={handleFileChange}
                 />
               </label>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 truncate max-w-xs">
                 {profilePic ? profilePic.name : "No file chosen"}
               </span>
             </div>
           </div>
+
           {uploading && (
             <p className="text-blue-500 text-sm">Uploading image...</p>
           )}
+
           <Button
             onClick={handleSignup}
             disabled={loading || uploading}
-            className="w-full mt-4"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3"
           >
             {loading ? <Loader2 className="animate-spin mr-2" /> : "Sign Up"}
           </Button>
-          {/* button for soogle Sign up */}
-          <Button onClick={googleRegister}
-          className="w-full" >
-            <img
-              src="https://www.google.com/favicon.ico"
-              alt="Google"
-              className="w-5 h-5 mr-3 "
-            />
-            SignUp with Google
-          </Button>
-          {/* <div className="text-center mt-2">
-            <p>
-              Already have an account?{" "}
-              <a href="/login" className="text-blue-600 hover:underline">
-                Log In
-              </a>
-            </p>
-          </div> */}
-            <div className="text-center text-sm mt-4">
+
+          <div className="flex items-center justify-center">
+            <span className="text-gray-500 mr-3">or</span>
+            <Button
+              onClick={googleRegister}
+              className="flex items-center border border-gray-300 bg-white hover:bg-gray-100 px-5 py-2 rounded-lg"
+            >
+              <img
+                src="https://www.google.com/favicon.ico"
+                alt="Google"
+                className="w-5 h-5 mr-2"
+              />
+              Google Sign Up
+            </Button>
+          </div>
+
+          <div className="text-center text-sm mt-4">
             Already have an account?{" "}
             <button
-              onClick={() => navigate('/login')}
-              className="text-blue-600 hover:underline focus:outline-none"
+              onClick={() => navigate("/login")}
+              className="text-indigo-600 hover:underline"
             >
               Log in here
             </button>
