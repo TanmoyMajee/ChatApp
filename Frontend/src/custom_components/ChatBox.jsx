@@ -35,6 +35,7 @@ export default function ChatBox({ onBack }) {
   const messagesEndRef = useRef(null);
   const [showMenu, setShowMenu] = useState(false)
   const [msgLoading, setMsgLoading] = useState(false)
+  const [isMsgSending, setIsMsgSending] = useState(false)
   // console.log(messages.map(m => m._id));
 
   // Join the room when a chat is selected and socket is available.
@@ -120,8 +121,9 @@ export default function ChatBox({ onBack }) {
   // Handle sending a new message.
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || isMsgSending) return;
     try {
+      setIsMsgSending(true);
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -141,12 +143,12 @@ export default function ChatBox({ onBack }) {
         content: newMessage,
         sender: user,
       });
-      // setMessages([...messages, data]);
-      // no need to update messages here, as the message will be received via socket.
-      // update the input field to empty after sending the msg
+
       setNewMessage("");
     } catch (error) {
       console.error("Failed to send message", error);
+    } finally {
+      setIsMsgSending(false);
     }
   };
 
@@ -216,8 +218,8 @@ export default function ChatBox({ onBack }) {
               >
                 <div
                   className={`max-w-[85%] md:max-w-[65%] px-3 py-1.5 rounded-lg shadow-sm relative text-sm md:text-base break-words ${isSender
-                      ? "bg-[#005c4b] text-white rounded-tr-none"
-                      : "bg-white dark:bg-[#202c33] text-[#111b21] dark:text-[#e9edef] rounded-tl-none"
+                    ? "bg-[#005c4b] text-white rounded-tr-none"
+                    : "bg-white dark:bg-[#202c33] text-[#111b21] dark:text-[#e9edef] rounded-tl-none"
                     }`}
                 >
                   {/* Sender Name in Group Chats (Receiver Side Only) */}
@@ -262,10 +264,10 @@ export default function ChatBox({ onBack }) {
         />
         <button
           type="submit"
-          disabled={!newMessage.trim()}
+          disabled={!newMessage.trim() || isMsgSending}
           className={`p-2 rounded-full transition-colors flex items-center justify-center ${newMessage.trim()
-              ? "bg-[#00a884] hover:bg-[#008f6f] text-white shadow-md transform active:scale-95"
-              : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
+            ? "bg-[#00a884] hover:bg-[#008f6f] text-white shadow-md transform active:scale-95"
+            : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
             }`}
         >
           {/* Send Icon SVG */}
