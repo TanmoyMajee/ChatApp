@@ -89,7 +89,7 @@ export default function ChatMenu({ chat, closeMenu }) {
     <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={closeMenu}>
       <div className="absolute right-4 top-16 w-56 bg-white dark:bg-gray-900 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-50" onClick={(e) => e.stopPropagation()}>
         {/* Common Menu Items */}
-        <MenuItem onClick={handleMute}>Mute Chat</MenuItem>
+        <MenuItem onClick={handleMute}>Mute</MenuItem>
         {/* <MenuItem onClick={handleArchive}>Archive Chat</MenuItem> */}
 
         {/* Conditional Rendering based on chat type */}
@@ -101,7 +101,6 @@ export default function ChatMenu({ chat, closeMenu }) {
           </>
         ) : (
           <>
-            <MenuItem onClick={handleViewContact}>View Contact</MenuItem>
             <MenuItem onClick={handleBlockUser}>Block User</MenuItem>
           </>
         )}
